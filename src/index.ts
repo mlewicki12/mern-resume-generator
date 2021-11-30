@@ -3,6 +3,8 @@ import express from 'express';
 import fs from 'fs';
 import { Endpoint } from './utilities/types';
 
+import liquid from './liquid';
+
 const app = express();
 const port = 8080;
 
@@ -39,6 +41,8 @@ files.forEach(async item => {
   const module = await require(`./${ENDPOINTS_DIR}/${item}`).default;
   module.forEach((endpoint: Endpoint) => defineEndpoint(item, endpoint));
 });
+
+app.engine('liquid', liquid.express());
 
 app.listen(port, () => {
   console.log(`server started at http://localhost:${port}`);

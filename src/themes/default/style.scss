@@ -1,0 +1,147 @@
+
+@media print {
+  .resume-extra {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+
+    > p {
+      margin: 0;
+    }
+  }
+
+  .resume-header {
+    width: 100%;
+    height: fit-content;
+
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: space-between;
+
+    padding-bottom: 1rem;
+
+    > .resume-info {
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+
+      > .resume-info-main {
+        > .resume-header-name {
+          margin: 0;
+        }
+
+        > .resume-header-position {
+          margin: 0;
+          font-size: 1rem;
+        }
+      }
+
+      > .resume-header-links {
+        margin: 0;
+      }
+    }
+
+    > .resume-photo {
+      max-width: 3.5cm;
+      max-height: 3.5cm;
+
+      margin-right: 2rem;
+    }
+  }
+
+  .resume-job {
+    width: 100%;
+
+    h3, h4, p {
+      margin: 0;
+    }
+
+    > .resume-job-header {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      width: 100%;
+
+      > .resume-job-company {
+        display: flex;
+        flex-flow: column nowrap;
+      }
+    }
+  }
+
+  .resume-separator {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+
+    height: fit-content;
+
+    margin: 0.25rem;
+
+    > h2 {
+      margin: 0.25rem;
+    }
+
+    > .border {
+      height: 3px;
+      border-bottom: 1px solid black;
+      margin-right: 0.5rem;
+      margin-left: 0.5rem;
+
+      width: 100%;
+    }
+  }
+
+  .resume-uni {
+    width: 100%;
+
+    h3, h4, p {
+      margin: 0;
+    }
+
+    > .resume-uni-header {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      width: 100%;
+      margin-bottom: 0.75rem;
+
+      > .resume-uni-info {
+        display: flex;
+        flex-flow: column nowrap;
+
+        > .resume-uni-degree {
+          font-weight: normal;
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  .resume-root {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    h1 {
+      margin: 0;
+    }
+
+    p {
+      margin: 0.5rem;
+    }
+  }
+}

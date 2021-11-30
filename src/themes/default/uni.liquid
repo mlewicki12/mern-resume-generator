@@ -1,0 +1,26 @@
+
+<div class='resume-uni'>
+  <div class='resume-uni-header'>
+    <div class='resume-uni-info'>
+      <h3>{{ university }} / {{ location }}</h3>
+      <h4 class='resume-uni-degree'>{{ degree }}</h4>
+    </div>
+    <p>{{ start }} - {{ end }}</p>
+  </div>
+
+  {% if gpa %}
+    <p><span style='font-weight: bold'>GPA:</span> {{ gpa }}</p>
+  {% endif %}
+
+  {% if coursework %}
+    <p><span style='font-weight: bold'>Relevant coursework:</span> {{ coursework | join: ', ' }}</p>
+  {% endif %}
+
+  {% if awards %}
+    <p><span style='font-weight: bold'>Awards and honors:</span> {{ awards | join: ', ' }}</p>
+  {% endif %}
+
+  {% if extracurriculars %}
+    <p><span style='font-weight: bold'>Extracurricular activities:</span> {{ extracurriculars | join: ', ' }}</p>
+  {% endif %}
+</div>
