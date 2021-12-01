@@ -7,7 +7,7 @@ const API_ROUTE = 'api';
 const ENDPOINTS_DIR = 'endpoints';
 
 const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
-  const route = `/${API_ROUTE}/${base}${info.route}`;
+  const route = `/${API_ROUTE}/${base}/${info.route}`;
   switch (info.method) {
     case 'GET':
       app.get(route, info.callback);
