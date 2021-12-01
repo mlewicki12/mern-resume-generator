@@ -1,4 +1,7 @@
 
+import liquid from '../liquid';
+
+const layout = `
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -9,5 +12,12 @@
   </head>
   <body>
     {% block content %} no resume found {% endblock %}
+    {{ name }}
   </body>
 </html>
+`
+
+export const generate = async (body: any) => {
+  // dynamically import eventually
+  return await liquid.parseAndRender(layout, body);
+}
