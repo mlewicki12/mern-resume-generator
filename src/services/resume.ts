@@ -3,10 +3,11 @@ import liquid from '../liquid';
 import yaml from 'js-yaml';
 import fs from 'fs';
 
+const RESOURCES_DIR = './resources';
+
 const getLayout: () => Promise<string> = () => {
   return new Promise((resolve, reject) => {
-    // TODO: separate liquid stuff from src
-    fs.readFile('./src/layouts/root.liquid', (err, data) => {
+    fs.readFile(`${RESOURCES_DIR}/layouts/root.liquid`, (err, data) => {
       if(err) {
         reject(err);
       }
@@ -18,7 +19,7 @@ const getLayout: () => Promise<string> = () => {
 
 const readThemes: () => Promise<string[]> = () => {
   return new Promise((resolve, reject) => {
-    fs.readdir('./src/themes', (err, data) => {
+    fs.readdir(`${RESOURCES_DIR}/themes`, (err, data) => {
       if(err) {
         reject(err);
       }
@@ -32,7 +33,7 @@ const readThemes: () => Promise<string[]> = () => {
 const loadTheme: (name: string) => Promise<any> = (name) => {
   return new Promise((resolve, reject) => {
     // TODO: add file exists check
-    fs.readFile(`./src/themes/${name}/theme.yaml`, (err, data) => {
+    fs.readFile(`${RESOURCES_DIR}/themes/${name}/theme.yaml`, (err, data) => {
       if(err) {
         reject(err);
       }
