@@ -1,14 +1,18 @@
 
 import { theme, themes, generate } from '../../services/resume';
-import { Controller } from '../../utilities/types';
+import { Controller, ResumeRequest } from '../../utilities/types';
 
 const Resume: Controller = [
   {
     route: '',
     method: 'POST',
     callback: async (req, res) => {
-      const generated = await generate(req.body);
-      res.send(generated);
+      generate(req.body as ResumeRequest)
+        .then(gen => res.send(gen))
+        .catch(err => {
+          console.log(err);
+          res.send(err)
+        });
     }
   },
   {
@@ -23,7 +27,7 @@ const Resume: Controller = [
     route: 'themes/:name',
     method: 'GET',
     callback: async (req, res) => {
-      // TODO look up params in typescript
+      // TODO: look up params in typescript
       const themeInfo = await theme((req.params as any).name);
       res.send(themeInfo);
     }

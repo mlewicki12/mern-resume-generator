@@ -2,6 +2,7 @@
 import liquid from '../liquid';
 import yaml from 'js-yaml';
 import fs from 'fs';
+import { KeyValues, LiquidFile, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
 
 const RESOURCES_DIR = './resources';
 
@@ -30,25 +31,105 @@ const readThemes: () => Promise<string[]> = () => {
 }
 
 // eventually will be a theme object, but for testing purposes
-const loadTheme: (name: string) => Promise<any> = (name) => {
+const loadTheme: (name: string) => Promise<Theme> = (name) => {
   return new Promise((resolve, reject) => {
     // TODO: add file exists check
-    fs.readFile(`${RESOURCES_DIR}/themes/${name}/theme.yaml`, (err, data) => {
+    const path = `${RESOURCES_DIR}/themes/${name}/`;
+    fs.readFile(`${path}/theme.yaml`, (err, data) => {
       if(err) {
         reject(err);
+        console.error(err);
       }
 
-      resolve(yaml.load(
-        data.toString()
-      ));
+      resolve({
+        name,
+        path,
+        components: yaml.load(
+          data.toString()
+        ) as KeyValues<ThemeNode>
+      });
     });
   })
 }
 
-export const generate = async (body: any) => {
-  // dynamically import eventually
-  const layout = await getLayout();
-  return await liquid.parseAndRender(layout, body);
+const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
+  return new Promise((resolve, reject) => {
+    // TODO: add file exists check
+    fs.readFile(`${theme.path}/${name}.liquid`, (err, data) => {
+      // TODO: custom callback type to avoid having to type this shit
+      if(err) {
+        reject(err);
+      }
+
+      theme.components[name].liquid = data.toString();
+      resolve(data.toString());
+    });
+  });
+}
+
+export const generate = async (body: ResumeRequest) => {
+  // copy default layout to generate folder
+  const name = new Date().getTime();
+  // callback hell let's go
+  // not the most efficient if this ever goes public, since two requests might go on at the same time yadda yadda yadda
+  return new Promise<string>((resolve, reject) => {
+      fs.mkdir(`public/resumes/${name}`, async (errMk) => {
+      if(errMk) throw errMk;
+
+      fs.copyFile('./resources/layouts/root.liquid', `public/resumes/${name}/root.liquid`, async (errCp) => {
+        if(errCp) throw errCp;
+
+        // TODO add in-depth error checking et al
+        const theme = await loadTheme(body.theme ?? 'default');
+
+        if (!body.components) {
+          reject('no resume components provided');
+        }
+
+        // body should be given an array of element names and variables
+        const generated = body.components.map(item => {
+          return new Promise<string>((resolve, reject) => {
+            if(!item.component || !theme.components[item.component]) {
+              resolve(`<h1 style="color:red">Missing component ${item.component}</h1>`);
+            }
+
+            if(!theme.components[item.component].liquid) {
+              loadComponent(theme, item.component)
+                .then(data => {
+                  liquid.parseAndRender(data, item.variables)
+                    .then(data => resolve(data))
+                    .catch(err => reject(err));
+                })
+                .catch(err => reject(err));
+            } else {
+              liquid.parseAndRender(theme.components[item.component].liquid, item.variables)
+                .then(data => resolve(data))
+                .catch(err => reject(err));
+            }
+          })
+        });
+
+        // store the built theme and drop it in the default layout
+        Promise.all(generated)
+          .then(async data => {
+            const output = data.reduce((prev, item) => {
+              return prev + item;
+            }, '{% layout \'root.liquid\' %}\n{% block content %}') + '\n{% endblock %}';
+
+            fs.writeFileSync(`public/resumes/${name}/out.liquid`, output);
+            liquid.renderFile(`public/resumes/${name}/out.liquid`)
+              .then(render => {
+                fs.writeFileSync(`public/resumes/${name}/index.html`, render);
+                resolve(`http://localhost:8080/resumes/${name}`);
+              })
+              .catch(err => reject(err))
+          })
+          .catch(err => {
+            reject(err);
+          });
+      });
+    });
+  });
 }
 
 export const themes = async () => {

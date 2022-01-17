@@ -17,6 +17,9 @@
         "timeEnd",
         "trace"
       ]
+    },
+    "no-shadowed-variable": {
+      "severity": "warning"
     }
   },
   "rulesDirectory": []

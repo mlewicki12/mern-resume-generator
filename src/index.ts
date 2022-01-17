@@ -10,6 +10,8 @@ const port = 8080;
 
 app.engine('liquid', liquid.express());
 
+app.use(express.static('public'));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());

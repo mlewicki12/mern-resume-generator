@@ -1,0 +1,33 @@
+{
+  "theme": "default",
+  "components": [
+    {
+      "component": "header",
+      "variables": {
+        "profile": "test",
+        "name": "Testy McTestFace",
+        "position": "QA Tester",
+        "info": "uhh does tests ig idk"
+      }
+    },
+    {
+      "component": "separator",
+      "variables": {
+        "title": "Experience"
+      }
+    },
+    {
+      "component": "job",
+      "variables": {
+        "company": "The Business Factory",
+        "location": "Business, MA",
+        "title": "QA Tester",
+        "start": "Nov. 2018",
+        "end": "Feb. 2020",
+        "responsibilities": [
+          "test stuff"
+        ]
+      }
+    }
+  ]
+}
