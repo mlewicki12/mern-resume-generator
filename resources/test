@@ -1,3 +1,0 @@
-curl -X POST -H 'Content-Type: application/json' -d '@test.json' localhost:8080/api/resume
-
-curl -X POST -F 'image=@photo.jpg' localhost:8080/api/assets
