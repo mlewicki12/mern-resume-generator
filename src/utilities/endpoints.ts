@@ -3,12 +3,10 @@ import express, { RequestHandler } from 'express';
 import fs from 'fs';
 
 import { Endpoint } from '../utilities/types';
-
-const API_ROUTE = 'api';
-const ENDPOINTS_DIR = 'endpoints';
+import { API, ENDPOINTS } from '../utilities/constants';
 
 const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
-  const route = `/${API_ROUTE}/${base}/${info.route}`;
+  const route = `/${API}/${base}/${info.route}`;
   switch (info.method) {
     case 'GET':
       app.get(route, info.callback);
@@ -39,7 +37,7 @@ const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
 }
 
 const buildEndpoints = (app: express.Express, route?: string) => {
-  const endpointsRoute = route ?? ENDPOINTS_DIR;
+  const endpointsRoute = route ?? ENDPOINTS;
 
   // fs is bad and reads from base directory instead of src/
   const files = fs.readdirSync(`./src/${endpointsRoute}`);

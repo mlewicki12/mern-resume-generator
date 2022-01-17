@@ -2,13 +2,13 @@
 import liquid from '../liquid';
 import yaml from 'js-yaml';
 import fs from 'fs';
-import { KeyValues, LiquidFile, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
 
-const RESOURCES_DIR = './resources';
+import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
+import { RESOURCES } from '../utilities/constants';
 
 const getLayout: () => Promise<string> = () => {
   return new Promise((resolve, reject) => {
-    fs.readFile(`${RESOURCES_DIR}/layouts/root.liquid`, (err, data) => {
+    fs.readFile(`${RESOURCES}/layouts/root.liquid`, (err, data) => {
       if(err) {
         reject(err);
       }
@@ -20,7 +20,7 @@ const getLayout: () => Promise<string> = () => {
 
 const readThemes: () => Promise<string[]> = () => {
   return new Promise((resolve, reject) => {
-    fs.readdir(`${RESOURCES_DIR}/themes`, (err, data) => {
+    fs.readdir(`${RESOURCES}/themes`, (err, data) => {
       if(err) {
         reject(err);
       }
@@ -34,7 +34,7 @@ const readThemes: () => Promise<string[]> = () => {
 const loadTheme: (name: string) => Promise<Theme> = (name) => {
   return new Promise((resolve, reject) => {
     // TODO: add file exists check
-    const path = `${RESOURCES_DIR}/themes/${name}/`;
+    const path = `${RESOURCES}/themes/${name}/`;
     fs.readFile(`${path}/theme.yaml`, (err, data) => {
       if(err) {
         reject(err);

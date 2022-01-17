@@ -1,22 +1,24 @@
 
 import fs from 'fs';
 
+import { ASSETS } from '../utilities/constants';
+
 export const getAssetList = () => {
   return new Promise((resolve, reject) => {
-      fs.access('uploads', fs.constants.F_OK, (err) => {
+      fs.access(`${ASSETS}`, fs.constants.F_OK, (err) => {
         if(err) {
           reject(err);
           return;
         }
 
         // mm callback hell
-        fs.access('uploads/images', fs.constants.F_OK, (err) => {
+        fs.access(`${ASSETS}/images`, fs.constants.F_OK, (err) => {
           if(err) {
             reject(err);
             return;
           }
 
-          fs.readdir('uploads/images', (err, files) => {
+          fs.readdir(`${ASSETS}/images`, (err, files) => {
             if(err) {
               reject(err);
               return;

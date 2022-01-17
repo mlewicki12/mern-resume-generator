@@ -1,11 +1,12 @@
 
 import multer from 'multer';
-import { getAssetList } from '../../services/assets';
 
 import { Controller } from '../../utilities/types';
+import { getAssetList } from '../../services/assets';
+import { ASSETS } from '../../utilities/constants';
 
 const storage = multer.diskStorage({
-  destination: 'uploads/images',
+  destination: `${ASSETS}/images`,
   filename: (req, file, cb) => {
     const extension = file.originalname.split('.').pop();
     req.name = new Date().getTime().toString();
