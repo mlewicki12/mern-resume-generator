@@ -8,10 +8,10 @@ const Resume: Controller = [
     method: 'POST',
     callback: async (req, res) => {
       generate(req.body as ResumeRequest)
-        .then(gen => res.send(gen))
+        .then(gen => res.status(200).send(gen))
         .catch(err => {
           console.log(err);
-          res.send(err)
+          res.status(500).send(err)
         });
     }
   },
@@ -20,7 +20,7 @@ const Resume: Controller = [
     method: 'GET',
     callback: async (req, res) => {
       const themesList = await themes();
-      res.send(themesList);
+      res.status(200).send(themesList);
     }
   },
   {
@@ -29,7 +29,7 @@ const Resume: Controller = [
     callback: async (req, res) => {
       // TODO: look up params in typescript
       const themeInfo = await theme((req.params as any).name);
-      res.send(themeInfo);
+      res.status(200).send(themeInfo);
     }
   }
 ]

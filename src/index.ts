@@ -18,6 +18,9 @@ app.use(bodyParser.raw());
 
 // there probably is a way to do this the other way around
 // but that's for a later date :)
+//  maybe not, app.use is better for middleware, so it might be better
+//  to do it as is, perhaps app.use(endpoints('dir')) if i can figure
+//  out how to get the express app
 endpoints(app);
 
 app.listen(port, () => {

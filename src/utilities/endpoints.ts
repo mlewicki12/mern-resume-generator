@@ -1,5 +1,5 @@
 
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import fs from 'fs';
 
 import { Endpoint } from '../utilities/types';
@@ -15,7 +15,11 @@ const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
       break;
 
     case 'POST':
-      app.post(route, info.callback);
+      if(info.upload) {
+        app.post(route, info.upload, info.callback);
+      } else {
+        app.post(route, info.callback);
+      }
       break;
 
     case 'PUT':
@@ -27,16 +31,20 @@ const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
       break;
 
     default:
-      console.log(`unknown operation ${info.method}`);
-      break;
+      console.error(`unknown operation ${info.method}`);
+      return;
   }
+
+  console.log(`defined ${info.method} handler for /api/${base}/${info.route}`);
 }
 
-const buildEndpoints = (app: express.Express) => {
+const buildEndpoints = (app: express.Express, route?: string) => {
+  const endpointsRoute = route ?? ENDPOINTS_DIR;
+
   // fs is bad and reads from base directory instead of src/
-  const files = fs.readdirSync(`./src/${ENDPOINTS_DIR}`);
+  const files = fs.readdirSync(`./src/${endpointsRoute}`);
   files.forEach(async item => {
-    const module = await require(`../${ENDPOINTS_DIR}/${item}`).default;
+    const module = await require(`../${endpointsRoute}/${item}`).default;
     module.forEach((endpoint: Endpoint) => defineEndpoint(app, item, endpoint));
   });
 }
