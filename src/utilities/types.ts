@@ -43,3 +43,8 @@ export type LiquidFile = {
   name: string;
   liquid: string;
 }
+
+export type AssetFile = {
+  name: string;
+  extension: string;
+}

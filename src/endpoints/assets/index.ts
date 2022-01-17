@@ -8,9 +8,10 @@ import { ASSETS } from '../../utilities/constants';
 const storage = multer.diskStorage({
   destination: `${ASSETS}/images`,
   filename: (req, file, cb) => {
-    const extension = file.originalname.split('.').pop();
     req.name = new Date().getTime().toString();
-    cb(null, `${req.name}.${extension}`);
+    req.extension = file.originalname.split('.').pop();
+
+    cb(null, `${req.name}.${req.extension}`);
   }
 });
 
@@ -24,7 +25,7 @@ const Assets: Controller = [
     callback: async (req, res) => {
       // TODO: change to real logging (idk what that means, but you'll know ;))
       console.log(`received image ${req.name}`);
-      res.status(200).send(req.name);
+      res.status(200).send({name: req.name, extension: req.extension});
     }
   },
   {
@@ -37,7 +38,7 @@ const Assets: Controller = [
         })
         .catch(err => {
           console.error(err);
-          res.status(500);
+          res.sendStatus(500);
         })
     }
   }
