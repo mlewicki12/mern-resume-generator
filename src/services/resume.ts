@@ -30,7 +30,6 @@ const readThemes: () => Promise<string[]> = () => {
   });
 }
 
-// eventually will be a theme object, but for testing purposes
 const loadTheme: (name: string) => Promise<Theme> = (name) => {
   return new Promise((resolve, reject) => {
     // TODO: add file exists check
@@ -55,14 +54,20 @@ const loadTheme: (name: string) => Promise<Theme> = (name) => {
 const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
   return new Promise((resolve, reject) => {
     // TODO: add file exists check
-    fs.readFile(`${theme.path}/${name}.liquid`, (err, data) => {
-      // TODO: custom callback type to avoid having to type this shit
+    fs.access(`${theme.path}/${name}.liquid`, fs.constants.F_OK, (err) => {
       if(err) {
         reject(err);
       }
 
-      theme.components[name].liquid = data.toString();
-      resolve(data.toString());
+      fs.readFile(`${theme.path}/${name}.liquid`, (err, data) => {
+        // TODO: custom callback type to avoid having to type this shit
+        if(err) {
+          reject(err);
+        }
+
+        theme.components[name].liquid = data.toString();
+        resolve(data.toString());
+      });
     });
   });
 }
@@ -72,11 +77,25 @@ export const generate = async (body: ResumeRequest) => {
   const name = new Date().getTime();
   // callback hell let's go
   // not the most efficient if this ever goes public, since two requests might go on at the same time yadda yadda yadda
-  return new Promise<string>((resolve, reject) => {
-      fs.mkdir(`public/resumes/${name}`, async (errMk) => {
+  return new Promise<string>((resolve, rej) => {
+    // thrown here as an afterthought bc i don't wanna rename everything
+    // but this will clear all work files on error
+    const reject = (reason: string) => {
+      fs.rm(`public/resumes/${name}`, {
+        recursive: true,
+        force: true
+      }, (err) => {
+        rej(err);
+      });
+
+      rej(reason);
+    }
+
+    const dir = `public/resumes/${name}`;
+    fs.mkdir(dir, async (errMk) => {
       if(errMk) throw errMk;
 
-      fs.copyFile('./resources/layouts/root.liquid', `public/resumes/${name}/root.liquid`, async (errCp) => {
+      fs.copyFile('./resources/layouts/root.liquid', `${dir}/root.liquid`, async (errCp) => {
         if(errCp) throw errCp;
 
         // TODO add in-depth error checking et al
@@ -90,7 +109,7 @@ export const generate = async (body: ResumeRequest) => {
         const generated = body.components.map(item => {
           return new Promise<string>((resolve, reject) => {
             if(!item.component || !theme.components[item.component]) {
-              resolve(`<h1 style="color:red">Missing component ${item.component}</h1>`);
+              resolve(`<h1 style="color:red">Missing theme component ${item.component}</h1>`);
             }
 
             if(!theme.components[item.component].liquid) {
@@ -116,10 +135,17 @@ export const generate = async (body: ResumeRequest) => {
               return prev + item;
             }, '{% layout \'root.liquid\' %}\n{% block content %}') + '\n{% endblock %}';
 
-            fs.writeFileSync(`public/resumes/${name}/out.liquid`, output);
-            liquid.renderFile(`public/resumes/${name}/out.liquid`)
+            // using a temp file here to use layouts
+            fs.writeFileSync(`${dir}/out.liquid`, output);
+            liquid.renderFile(`${dir}/out.liquid`)
               .then(render => {
-                fs.writeFileSync(`public/resumes/${name}/index.html`, render);
+                fs.writeFileSync(`${dir}/index.html`, render);
+
+                // delete working liquid files
+                fs.unlinkSync(`public/resumes/${name}/root.liquid`);
+                fs.unlinkSync(`public/resumes/${name}/out.liquid`);
+
+                // return the address of hosted file
                 resolve(`http://localhost:8080/resumes/${name}`);
               })
               .catch(err => reject(err))

@@ -18,11 +18,18 @@ app.use(bodyParser.raw());
 
 // there probably is a way to do this the other way around
 // but that's for a later date :)
-//  maybe not, app.use is better for middleware, so it might be better
-//  to do it as is, perhaps app.use(endpoints('dir')) if i can figure
-//  out how to get the express app
+// maybe not, app.use is mainly for middleware whereas this defines endpoints
+// so it might be better to keep it as is
 endpoints(app);
 
-app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
+const server = app.listen(port, '127.0.0.1', () => {
+  let address = server.address();
+  if(typeof address !== 'string') {
+    const host = address.address;
+    const port = address.port;
+
+    address = `http://${host}:${port}`;
+  }
+
+  console.log(`server started at ${address}`);
 });

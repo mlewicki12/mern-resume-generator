@@ -12,29 +12,21 @@ export const getAssetList: () => Promise<AssetFile[]> = () => {
           return;
         }
 
-        // mm callback hell
-        fs.access(`${ASSETS}/images`, fs.constants.F_OK, (err) => {
+        fs.readdir(`${ASSETS}`, (err, files) => {
           if(err) {
             reject(err);
             return;
           }
 
-          fs.readdir(`${ASSETS}/images`, (err, files) => {
-            if(err) {
-              reject(err);
-              return;
-            }
-
-            const names = files.map(item => {
-              const splt = item.split('.');
-              return {
-                name: splt.slice(0, -1).join('.'),
-                extension: splt.pop()
-              };
-            });
-
-            resolve(names);
+          const names = files.map(item => {
+            const splt = item.split('.');
+            return {
+              name: splt.slice(0, -1).join('.'),
+              extension: splt.pop()
+            };
           });
+
+          resolve(names);
         });
       });
   });
