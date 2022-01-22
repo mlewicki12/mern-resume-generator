@@ -11,6 +11,7 @@ const getLayout: () => Promise<string> = () => {
     fs.readFile(`${RESOURCES}/layouts/root.liquid`, (err, data) => {
       if(err) {
         reject(err);
+        return;
       }
 
       resolve(data.toString());
@@ -23,6 +24,7 @@ const readThemes: () => Promise<string[]> = () => {
     fs.readdir(`${RESOURCES}/themes`, (err, data) => {
       if(err) {
         reject(err);
+        return;
       }
 
       resolve(data);
@@ -34,18 +36,27 @@ const loadTheme: (name: string) => Promise<Theme> = (name) => {
   return new Promise((resolve, reject) => {
     // TODO: add file exists check
     const path = `${RESOURCES}/themes/${name}/`;
-    fs.readFile(`${path}/theme.yaml`, (err, data) => {
+    fs.access(`${path}/theme.yaml`, fs.constants.F_OK, (err) => {
       if(err) {
         reject(err);
         console.error(err);
+        return;
       }
 
-      resolve({
-        name,
-        path,
-        components: yaml.load(
-          data.toString()
-        ) as KeyValues<ThemeNode>
+      fs.readFile(`${path}/theme.yaml`, (err, data) => {
+        if(err) {
+          reject(err);
+          console.error(err);
+          return;
+        }
+
+        resolve({
+          name,
+          path,
+          components: yaml.load(
+            data.toString()
+          ) as KeyValues<ThemeNode>
+        });
       });
     });
   })
@@ -53,16 +64,17 @@ const loadTheme: (name: string) => Promise<Theme> = (name) => {
 
 const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
   return new Promise((resolve, reject) => {
-    // TODO: add file exists check
     fs.access(`${theme.path}/${name}.liquid`, fs.constants.F_OK, (err) => {
       if(err) {
         reject(err);
+        return;
       }
 
       fs.readFile(`${theme.path}/${name}.liquid`, (err, data) => {
         // TODO: custom callback type to avoid having to type this shit
         if(err) {
           reject(err);
+          return;
         }
 
         theme.components[name].liquid = data.toString();
@@ -80,29 +92,35 @@ export const generate = async (body: ResumeRequest) => {
   return new Promise<string>((resolve, rej) => {
     // thrown here as an afterthought bc i don't wanna rename everything
     // but this will clear all work files on error
-    const reject = (reason: string) => {
+    const reject = (reason: NodeJS.ErrnoException | string) => {
       fs.rm(`public/resumes/${name}`, {
         recursive: true,
         force: true
       }, (err) => {
-        rej(err);
+        rej(reason);
       });
-
-      rej(reason);
     }
 
+    // TODO make this not one function so it's legible
     const dir = `public/resumes/${name}`;
     fs.mkdir(dir, async (errMk) => {
-      if(errMk) throw errMk;
+      if(errMk) {
+        reject(errMk);
+        return;
+      } 
 
       fs.copyFile('./resources/layouts/root.liquid', `${dir}/root.liquid`, async (errCp) => {
-        if(errCp) throw errCp;
+        if(errCp) {
+          reject(errCp);
+          return;
+        }
 
         // TODO add in-depth error checking et al
         const theme = await loadTheme(body.theme ?? 'default');
 
         if (!body.components) {
           reject('no resume components provided');
+          return;
         }
 
         // body should be given an array of element names and variables

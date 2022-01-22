@@ -2,7 +2,7 @@
 header:
   - name: Header
   - variables:
-    - profile: string
+    - profile: image
     - name: string
     - position: string
     - info: string[]
