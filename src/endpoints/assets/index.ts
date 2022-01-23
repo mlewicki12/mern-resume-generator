@@ -26,7 +26,6 @@ const Assets: Controller = [
     upload: upload.single('image'),
     callback: async (req, res) => {
       // TODO: change to real logging (idk what that means, but you'll know ;))
-      console.log(`received image ${req.name}`);
       res.status(200).send({name: req.name, extension: req.extension});
     }
   },

@@ -1,66 +1,9 @@
 
-import liquid from '../liquid';
-import yaml from 'js-yaml';
 import fs from 'fs';
 
-import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
-import { RESOURCES } from '../utilities/constants';
-
-const getLayout: () => Promise<string> = () => {
-  return new Promise((resolve, reject) => {
-    fs.readFile(`${RESOURCES}/layouts/root.liquid`, (err, data) => {
-      if(err) {
-        reject(err);
-        return;
-      }
-
-      resolve(data.toString());
-    });
-  });
-}
-
-const readThemes: () => Promise<string[]> = () => {
-  return new Promise((resolve, reject) => {
-    fs.readdir(`${RESOURCES}/themes`, (err, data) => {
-      if(err) {
-        reject(err);
-        return;
-      }
-
-      resolve(data);
-    });
-  });
-}
-
-const loadTheme: (name: string) => Promise<Theme> = (name) => {
-  return new Promise((resolve, reject) => {
-    // TODO: add file exists check
-    const path = `${RESOURCES}/themes/${name}/`;
-    fs.access(`${path}/theme.yaml`, fs.constants.F_OK, (err) => {
-      if(err) {
-        reject(err);
-        console.error(err);
-        return;
-      }
-
-      fs.readFile(`${path}/theme.yaml`, (err, data) => {
-        if(err) {
-          reject(err);
-          console.error(err);
-          return;
-        }
-
-        resolve({
-          name,
-          path,
-          components: yaml.load(
-            data.toString()
-          ) as KeyValues<ThemeNode>
-        });
-      });
-    });
-  })
-}
+import liquid from '../../liquid';
+import { loadTheme, readThemes } from '../themes';
+import { ResumeRequest, Theme } from '../../utilities/types';
 
 const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
   return new Promise((resolve, reject) => {
@@ -87,6 +30,7 @@ const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, n
 export const generate = async (body: ResumeRequest) => {
   // copy default layout to generate folder
   const name = new Date().getTime();
+
   // callback hell let's go
   // not the most efficient if this ever goes public, since two requests might go on at the same time yadda yadda yadda
   return new Promise<string>((resolve, rej) => {
@@ -107,7 +51,7 @@ export const generate = async (body: ResumeRequest) => {
       if(errMk) {
         reject(errMk);
         return;
-      } 
+      }
 
       fs.copyFile('./resources/layouts/root.liquid', `${dir}/root.liquid`, async (errCp) => {
         if(errCp) {
@@ -115,8 +59,18 @@ export const generate = async (body: ResumeRequest) => {
           return;
         }
 
-        // TODO add in-depth error checking et al
-        const theme = await loadTheme(body.theme ?? 'default');
+        let theme: Theme;
+
+        try {
+          theme = await loadTheme(body.theme ?? 'default');
+        } catch (e) {
+          reject(e);
+        }
+
+        if(!theme) {
+          reject(`error reading ${body.theme} theme`);
+          return;
+        }
 
         if (!body.components) {
           reject('no resume components provided');
@@ -164,7 +118,7 @@ export const generate = async (body: ResumeRequest) => {
                 fs.unlinkSync(`public/resumes/${name}/out.liquid`);
 
                 // return the address of hosted file
-                resolve(`http://localhost:8080/resumes/${name}`);
+                resolve(`${name}`);
               })
               .catch(err => reject(err))
           })
@@ -174,12 +128,4 @@ export const generate = async (body: ResumeRequest) => {
       });
     });
   });
-}
-
-export const themes = async () => {
-  return await readThemes();
-}
-
-export const theme = async(name: string) => {
-  return await loadTheme(name);
 }

@@ -1,37 +1,22 @@
 
-import { theme, themes, generate } from '../../services/resume';
+import { Request } from 'express';
+
 import { Controller, ResumeRequest } from '../../utilities/types';
+import { generate } from '../../services/resume';
 
 const Resume: Controller = [
   {
     route: '',
     method: 'POST',
-    callback: async (req, res) => {
-      generate(req.body as ResumeRequest)
-        .then(gen => res.status(200).send(gen))
+    callback: async (req: Request<{}, {}, ResumeRequest>, res) => {
+      generate(req.body)
+        .then(gen => res.status(200).send(`${req.app.locals.address}/resumes/${gen}`))
         .catch(err => {
-          console.log(err);
+          console.error(err);
           res.status(500).send(err)
         });
     }
   },
-  {
-    route: 'themes',
-    method: 'GET',
-    callback: async (req, res) => {
-      const themesList = await themes();
-      res.status(200).send(themesList);
-    }
-  },
-  {
-    route: 'themes/:name',
-    method: 'GET',
-    callback: async (req, res) => {
-      // TODO: look up params in typescript
-      const themeInfo = await theme((req.params as any).name);
-      res.status(200).send(themeInfo);
-    }
-  }
 ]
 
 export default Resume;

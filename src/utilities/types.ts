@@ -29,6 +29,12 @@ export type ThemeNode = {
   variables: KeyValues<string>;
 }
 
+export type ThemeVariableOptions = {
+  optional?: boolean;
+  multiple?: boolean;
+  image?: boolean;
+}
+
 export type ResumeRequest = {
   theme: string;
   components: Component[];

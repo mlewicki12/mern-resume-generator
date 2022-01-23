@@ -1,48 +1,61 @@
 ---
 header:
-  - name: Header
-  - variables:
-    - profile: image
-    - name: string
-    - position: string
-    - info: string[]
+  name: Header
+  variables:
+    profile:
+      image: true
+    name: {}
+    position:
+      optional: true
+    info:
+      optional: true
+      multiple: true
 
 job:
-  - name: Work Experience
-  - variables:
-    - company: string
-    - location: string
-    - title: string
-    - start: string | string[]
-    - end: string | string[]
-    - responsibilities: string[]
+  name: Work Experience
+  variables:
+    company: {}
+    location: {}
+    title: {}
+    start: {}
+    end:
+      optional: true
+    responsibilities:
+      multiple: true
 
 uni:
-  - name: Education
-  - variables:
-    - university: string
-    - location: string
-    - degree: string
-    - start: string
-    - end: string
-    - gpa: string
-    - coursework: string[]
-    - awards: string[]
-    - extracurriculars: string[]
+  name: Education
+  variables:
+    university: {}
+    location: {}
+    degree: {}
+    start: {}
+    end: {}
+    gpa:
+      optional: true
+    coursework:
+      multiple: true
+    awards:
+      multiple: true
+    extracurriculars:
+      multiple: true
 
 summary:
-  - name: Summary
-  - variables:
-    - body: string
+  name: Summary
+  variables:
+    body: {}
 
 extra:
-  - name: Extra
-  - variables:
-    - description: string
-    - start: string
-    - end: string
+  name: Extra
+  variables:
+    description: {}
+    start:
+      optional: true
+    end:
+      optional: true
 
 separator:
-  - name: Separator
-  - variables:
-    - title: string
+  name: Separator
+  variables:
+    title:
+      optional: true
