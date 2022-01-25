@@ -2,8 +2,8 @@
 import express, { RequestHandler } from 'express';
 import fs from 'fs';
 
-import { Endpoint } from '../utilities/types';
-import { API, ENDPOINTS } from '../utilities/constants';
+import { Endpoint } from 'utilities/types';
+import { API, ENDPOINTS } from 'utilities/constants';
 
 const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
   const route = `/${API}/${base}/${info.route}`;

@@ -1,8 +1,8 @@
 
 import { Request } from 'express';
 
-import { Controller, ResumeRequest } from '../../utilities/types';
-import { generate } from '../../services/resume';
+import { Controller, ResumeRequest } from '../utilities/types';
+import { generate } from '../services/resume';
 
 const Resume: Controller = [
   {
