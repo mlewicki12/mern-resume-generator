@@ -1,8 +1,8 @@
 
 import { Request } from 'express';
 
-import { Controller } from '../utilities/types';
-import { readThemes, loadTheme } from '../services/themes';
+import { Controller } from 'utilities/types';
+import { readThemes, loadTheme } from 'services/themes';
 
 const Resume: Controller = [
   {
