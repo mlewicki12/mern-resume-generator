@@ -2,60 +2,47 @@
 header:
   name: Header
   variables:
-    profile:
-      image: true
-    name: {}
-    position:
-      optional: true
-    info:
-      optional: true
-      multiple: true
+    - profile
+    - name
+    - position
+    - info
 
 job:
   name: Work Experience
   variables:
-    company: {}
-    location: {}
-    title: {}
-    start: {}
-    end:
-      optional: true
-    responsibilities:
-      multiple: true
+    - company
+    - location
+    - title
+    - start
+    - end
+    - responsibilities
 
 uni:
   name: Education
   variables:
-    university: {}
-    location: {}
-    degree: {}
-    start: {}
-    end: {}
-    gpa:
-      optional: true
-    coursework:
-      multiple: true
-    awards:
-      multiple: true
-    extracurriculars:
-      multiple: true
+    - university
+    - location
+    - degree
+    - start
+    - end
+    - gpa
+    - coursework
+    - awards
+    - extracurriculars
 
 summary:
   name: Summary
   variables:
-    body: {}
+    - body
 
 extra:
   name: Extra
   variables:
-    description: {}
-    start:
-      optional: true
-    end:
-      optional: true
+    - description
+    - start
+    - end
 
 separator:
   name: Separator
   variables:
-    title:
-      optional: true
+    - title

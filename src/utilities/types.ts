@@ -26,7 +26,7 @@ export type ThemeNode = {
   name: string;
   liquid: string;
   // will be its own type eventually
-  variables: KeyValues<string>;
+  variables: string[];
 }
 
 export type ThemeVariableOptions = {

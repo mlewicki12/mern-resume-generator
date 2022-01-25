@@ -3,7 +3,8 @@ import fs from 'fs';
 
 import liquid from '../../liquid';
 import { loadTheme, readThemes } from '../themes';
-import { ResumeRequest, Theme } from '../../utilities/types';
+import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../../utilities/types';
+import { ASSETS } from '../../utilities/constants';
 
 const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
   return new Promise((resolve, reject) => {
@@ -24,6 +25,44 @@ const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, n
         resolve(data.toString());
       });
     });
+  });
+}
+
+const generateComponent = async (dir: string, component: ThemeNode, values: KeyValues<string>) => {
+  return new Promise<any>((resolve, reject) => {
+    const variables = Object.keys(values).map(key => {
+      // means it's in the assets folder
+      if(typeof values[key] === 'string' && values[key].startsWith('@asset:')) {
+        // remove the asset prefix
+        const name = values[key].slice(7);
+
+        fs.access(`${ASSETS}/${name}`, fs.constants.F_OK, (err) => {
+          if(err) {
+            // should have more in-depth error reporting eventually
+            reject(err);
+            return;
+          }
+
+          fs.copyFile(`${ASSETS}/${name}`, `${dir}/${name}`, (err) => {
+            if(err) {
+              reject(err);
+              return;
+            }
+          });
+        });
+
+        return {key, value: name};
+      } else {
+        return {key, value: values[key]};
+      }
+    }).reduce((prev, next) => {
+      prev[next.key] = next.value;
+      return prev;
+    }, {} as KeyValues<string>);
+
+    liquid.parseAndRender(component.liquid, variables)
+      .then(data => resolve(data))
+      .catch(err => reject(err));
   });
 }
 
@@ -65,6 +104,7 @@ export const generate = async (body: ResumeRequest) => {
           theme = await loadTheme(body.theme ?? 'default');
         } catch (e) {
           reject(e);
+          return;
         }
 
         if(!theme) {
@@ -87,13 +127,16 @@ export const generate = async (body: ResumeRequest) => {
             if(!theme.components[item.component].liquid) {
               loadComponent(theme, item.component)
                 .then(data => {
-                  liquid.parseAndRender(data, item.variables)
+                  // feels weird not using data here,
+                  // but loadComponent will populate the theme
+                  // with the liquid data
+                  generateComponent(dir, theme.components[item.component], item.variables)
                     .then(data => resolve(data))
                     .catch(err => reject(err));
                 })
                 .catch(err => reject(err));
             } else {
-              liquid.parseAndRender(theme.components[item.component].liquid, item.variables)
+              generateComponent(dir, theme.components[item.component], item.variables)
                 .then(data => resolve(data))
                 .catch(err => reject(err));
             }
@@ -107,7 +150,7 @@ export const generate = async (body: ResumeRequest) => {
               return prev + item;
             }, '{% layout \'root.liquid\' %}\n{% block content %}') + '\n{% endblock %}';
 
-            // using a temp file here to use layouts
+            // using a temp file here to access the layout tag
             fs.writeFileSync(`${dir}/out.liquid`, output);
             liquid.renderFile(`${dir}/out.liquid`)
               .then(render => {
@@ -117,7 +160,7 @@ export const generate = async (body: ResumeRequest) => {
                 fs.unlinkSync(`public/resumes/${name}/root.liquid`);
                 fs.unlinkSync(`public/resumes/${name}/out.liquid`);
 
-                // return the address of hosted file
+                // return the dir of hosted file
                 resolve(`${name}`);
               })
               .catch(err => reject(err))
