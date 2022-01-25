@@ -2,7 +2,7 @@
 import fs from 'fs';
 
 import liquid from '../../liquid';
-import { loadTheme, readThemes } from '../themes';
+import { importThemeFile, loadGenerate, loadTheme, readThemes } from '../themes';
 import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../../utilities/types';
 import { ASSETS } from '../../utilities/constants';
 
@@ -160,8 +160,25 @@ export const generate = async (body: ResumeRequest) => {
                 fs.unlinkSync(`public/resumes/${name}/root.liquid`);
                 fs.unlinkSync(`public/resumes/${name}/out.liquid`);
 
-                // return the dir of hosted file
-                resolve(`${name}`);
+                loadGenerate(theme)
+                  .then(data => {
+                    const steps: Promise<void>[] = data.map(step => {
+                      switch(step.op) {
+                        case 'import':
+                          return importThemeFile(theme, step.file, dir);
+
+                        default:
+                          console.warn(`unknown operation ${step.op}, skipping!`);
+                          return Promise.resolve();
+                      }
+                    });
+
+                    Promise.all(steps)
+                      // make sure we get all the files copied in before returning the file
+                      .then(() => resolve(`${name}`))
+                      .catch(err => reject(err));
+                  })
+                  .catch(err => reject(err));
               })
               .catch(err => reject(err))
           })

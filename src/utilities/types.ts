@@ -54,3 +54,9 @@ export type AssetFile = {
   name: string;
   extension: string;
 }
+
+export type GenerateOperation = {
+  op: 'import';
+  file?: string;
+  pre?: string;
+}

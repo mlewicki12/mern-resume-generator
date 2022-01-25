@@ -26,9 +26,11 @@ endpoints(app);
 fs.access('public/resumes', fs.constants.F_OK, (err) => {
   if(err) {
     fs.mkdir('public/resumes', (err) => {
-      // throw error if the directory can't be created,
-      // bc it's used extensively by the server
-      throw err;
+      if(err) {
+        // throw error if the directory can't be created,
+        // bc it's used extensively by the server
+        throw err;
+      }
     });
   }
 });
