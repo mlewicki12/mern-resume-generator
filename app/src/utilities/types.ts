@@ -23,7 +23,8 @@ export type ThemeVariableOptions = {
 
 export type Component = {
   component: string;
-  variables: KeyValues<string>
+  variables: string[];
+  id: string;
 };
 
 export type AssetFile = {
