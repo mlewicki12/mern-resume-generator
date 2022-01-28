@@ -2,8 +2,8 @@
 import express, { RequestHandler } from 'express';
 import fs from 'fs';
 
-import { Endpoint } from 'utilities/types';
-import { API, ENDPOINTS } from 'utilities/constants';
+import { Endpoint } from './types';
+import { API, ENDPOINTS } from './constants';
 
 const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
   const route = `/${API}/${base}/${info.route}`;
@@ -42,8 +42,14 @@ const buildEndpoints = (app: express.Express, route?: string) => {
   // fs is bad and reads from base directory instead of src/
   const files = fs.readdirSync(`./src/${endpointsRoute}`);
   files.forEach(async item => {
-    const module = await require(`../${endpointsRoute}/${item}`).default;
-    module.forEach((endpoint: Endpoint) => defineEndpoint(app, item, endpoint));
+    try {
+      const fileName = item.split('.').slice(0, -1).join('.');
+      const module = await require(`../${endpointsRoute}/${fileName}`).default;
+      module.forEach((endpoint: Endpoint) => defineEndpoint(app, fileName, endpoint));
+    } catch(err) {
+      console.error(`error registering ${item} controller`);
+      console.error(err);
+    }
   });
 }
 
