@@ -4,13 +4,7 @@ import styled from 'styled-components';
 
 import { Draggable } from 'react-beautiful-dnd';
 
-const Container = styled.div`
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border: 1px solid black;
-  borderRadius: 16px;
-  background-color: white;
-`;
+import { Container } from 'utilities/styled';
 
 const Title = styled.h1`
   margin: 0;
