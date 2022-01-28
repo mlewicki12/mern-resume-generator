@@ -1,10 +1,10 @@
 
 import fs from 'fs';
 
-import liquid from 'liquid';
-import { importThemeFile, loadGenerate, loadTheme } from 'services/themes';
-import { KeyValues, ResumeRequest, Theme, ThemeNode } from 'utilities/types';
-import { ASSETS } from 'utilities/constants';
+import liquid from '../liquid';
+import { importThemeFile, loadGenerate, loadTheme, readThemes } from './themes';
+import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
+import { ASSETS } from '../utilities/constants';
 
 const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
   return new Promise((resolve, reject) => {

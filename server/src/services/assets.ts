@@ -1,8 +1,8 @@
 
 import fs from 'fs';
 
-import { AssetFile } from 'utilities/types';
-import { ASSETS } from 'utilities/constants';
+import { AssetFile } from '../utilities/types';
+import { ASSETS } from '../utilities/constants';
 
 export const getAssetList: () => Promise<AssetFile[]> = () => {
   return new Promise((resolve, reject) => {

@@ -2,8 +2,8 @@
 import yaml from 'js-yaml';
 import fs from 'fs';
 
-import { GenerateOperation, KeyValues, Theme, ThemeNode } from 'utilities/types';
-import { RESOURCES } from 'utilities/constants';
+import { GenerateOperation, KeyValues, Theme, ThemeNode } from '../utilities/types';
+import { RESOURCES } from '../utilities/constants';
 
 const getThemeDir: (theme: string | Theme) => string = (theme) => {
   const name = typeof theme === 'string' ? theme : theme.name;

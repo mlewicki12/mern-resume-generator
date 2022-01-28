@@ -1,9 +1,9 @@
 
 import multer from 'multer';
 
-import { Controller } from 'utilities/types';
-import { getAssetList } from 'services/assets';
-import { ASSETS } from 'utilities/constants';
+import { Controller } from '../utilities/types';
+import { getAssetList } from '../services/assets';
+import { ASSETS } from '../utilities/constants';
 
 const storage = multer.diskStorage({
   destination: `${ASSETS}`,

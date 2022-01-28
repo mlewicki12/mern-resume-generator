@@ -1,7 +1,6 @@
 
 import { Liquid } from 'liquidjs';
-
-import registerFilters from 'liquid/filters';
+import registerFilters from './filters';
 
 const liquid = new Liquid();
 

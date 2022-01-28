@@ -1,5 +1,5 @@
 
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import fs from 'fs';
 
 import { Endpoint } from 'utilities/types';

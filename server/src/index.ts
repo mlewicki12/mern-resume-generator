@@ -3,8 +3,8 @@ import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import liquid from 'liquid';
-import endpoints from 'utilities/endpoints';
+import liquid from './liquid';
+import endpoints from './utilities/endpoints';
 
 const app = express();
 const port = 8080;
