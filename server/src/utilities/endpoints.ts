@@ -43,6 +43,8 @@ const buildEndpoints = (app: express.Express, route?: string) => {
   const files = fs.readdirSync(`./src/${endpointsRoute}`);
   files.forEach(async item => {
     try {
+      // this should technically work for dirs as long as they don't have a dot in the name
+      // the idea is removing the extension if it's a file, so there's no trickery after compilation
       const fileName = item.split('.').slice(0, -1).join('.');
       const module = await require(`../${endpointsRoute}/${fileName}`).default;
       module.forEach((endpoint: Endpoint) => defineEndpoint(app, fileName, endpoint));

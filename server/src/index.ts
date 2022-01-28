@@ -2,6 +2,7 @@
 import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 
 import liquid from './liquid';
 import endpoints from './utilities/endpoints';
@@ -10,6 +11,8 @@ const app = express();
 const port = 8080;
 
 app.engine('liquid', liquid.express());
+
+app.use(cors());
 
 app.use(express.static('public'));
 
