@@ -22,10 +22,15 @@ export type ThemeVariableOptions = {
 }
 
 export type Component = {
-  component: string;
+  name: string;
   variables: string[];
-  id: string;
 };
+
+export type ResumeNode = {
+  component: string;
+  variables: KeyValues<string>;
+  id: string;
+}
 
 export type AssetFile = {
   name: string;
