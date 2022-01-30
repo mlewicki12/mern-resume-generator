@@ -115,6 +115,7 @@ const App = () => {
                             }, {} as KeyValues<string>);
                           }
 
+                          // force a re-render
                           setComponents(newComp);
                         }}
                         onDeleteComponent={(id) => setComponents(components.filter(comp => comp.id !== id))}

@@ -4,19 +4,8 @@ import styled from 'styled-components';
 
 import { Draggable } from 'react-beautiful-dnd';
 
-import { Container } from 'utilities/styled';
-import { FormControl, FormGroup, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
-import { Delete } from '@mui/icons-material';
-
-const TitleWrapper = styled.div`
-  border-bottom: 1px solid black
-  padding: 0.25rem;
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  margin-bottom: 0.5rem;
-`;
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, FormControl, FormGroup, FormHelperText, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
+import { Delete, ExpandMore } from '@mui/icons-material';
 
 type ResumeComponent = {
   component: string;
@@ -34,6 +23,9 @@ const ResumeComponent = ({
   onUpdateComponent, onDeleteComponent
 }: ResumeComponent) => {
   const [compDisplay, setCompDisplay] = useState<string>(component);
+  
+  const [changed, setChanged] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
   const updateComponent = (comp: string) => {
@@ -50,35 +42,47 @@ const ResumeComponent = ({
   return (
     <Draggable draggableId={id} index={index}>
       {provided => (
-        <Container {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-          <FormGroup row
-            sx={{display: 'flex', flexFlow: 'row nowrap', justifyContent: 'space-between', alignItems: 'center'}}>
-            <FormControl variant='outlined'>
-              <InputLabel id='component-type-label'>Component</InputLabel>
-              <Select
-                labelId='component-type-label'
-                id='component-type-select'
-                value={compDisplay}
-                error={error !== undefined}
-                label='Component'
-                onChange={e => updateComponent(e.target.value)}
-                sx={{display: 'flex', minWidth: '250px'}}
-              >
-                {components.map(item => (
-                  <MenuItem value={item} key={item}>{item}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <IconButton onClick={() => onDeleteComponent(id)} color='error'>
-              <Delete />
-            </IconButton>
-          </FormGroup>
-          <ul>
-            {variables.map(name => ( 
-              <li key={name}>{name}</li>
-            ))}
-          </ul>
-        </Container>
+        <Accordion sx={{padding: '0.5rem'}} expanded={expanded} onChange={(e, exp) => setExpanded(exp)}
+          {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+          <AccordionSummary expandIcon={<ExpandMore />}>
+            <FormGroup row
+              sx={{width: '100%', display: 'flex', flexFlow: 'row nowrap', justifyContent: 'space-between', alignItems: 'center'}}>
+              <FormControl variant='outlined'>
+                <InputLabel id='component-type-label'>Component</InputLabel>
+                <Select
+                  labelId='component-type-label'
+                  id='component-type-select'
+                  value={compDisplay}
+                  error={error !== undefined}
+                  label='Component'
+                  onChange={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    updateComponent(e.target.value);
+                  }}
+                  sx={{display: 'flex', minWidth: '250px'}}
+                >
+                  {components.map(item => (
+                    <MenuItem value={item} key={item}>{item}</MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{error}</FormHelperText>
+              </FormControl>
+              <IconButton onClick={() => onDeleteComponent(id)} color='error'
+                sx={{padding: '0 0.5rem'}}>
+                <Delete />
+              </IconButton>
+            </FormGroup>
+          </AccordionSummary>
+          <AccordionDetails>
+            <ul>
+              {variables.map(name => ( 
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </AccordionDetails>
+        </Accordion>
       )}
     </Draggable>
   );
