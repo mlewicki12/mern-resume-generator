@@ -1,10 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { Draggable } from 'react-beautiful-dnd';
 
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, FormControl, FormGroup, FormHelperText, IconButton, InputLabel, MenuItem, Select } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, FormControl, FormGroup, FormHelperText,
+  IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from '@mui/material';
 import { Delete, ExpandMore } from '@mui/icons-material';
 
 type ResumeComponent = {
@@ -24,7 +24,6 @@ const ResumeComponent = ({
 }: ResumeComponent) => {
   const [compDisplay, setCompDisplay] = useState<string>(component);
   
-  const [changed, setChanged] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
@@ -76,11 +75,22 @@ const ResumeComponent = ({
             </FormGroup>
           </AccordionSummary>
           <AccordionDetails>
-            <ul>
-              {variables.map(name => ( 
-                <li key={name}>{name}</li>
-              ))}
-            </ul>
+            <TableContainer component='div'>
+              <Table>
+                <TableBody>
+                  {variables.map(name => (
+                    <TableRow key={name} sx={{width: '100%'}}>
+                      <TableCell sx={{width: '70%'}}>
+                        <TextField id={`${name}-text-input`} label={name} variant='standard' />
+                      </TableCell>
+                      <TableCell align='right' sx={{width: '30%'}}>
+                        actions go here
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </AccordionDetails>
         </Accordion>
       )}

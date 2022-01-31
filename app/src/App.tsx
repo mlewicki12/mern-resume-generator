@@ -12,6 +12,7 @@ import ResumeComponent from 'components/resume-component';
 import { Container, CenteredDiv } from 'utilities/styled';
 import { Component, ResumeNode, KeyValues } from 'utilities/types';
 import { Add } from '@mui/icons-material';
+import ResumeInput from 'components/resume-input';
 
 const ComponentList = styled.div`
   padding: 1rem;
@@ -44,8 +45,8 @@ const App = () => {
       id: `component-${componentId}`
     });
 
+    // iterate on component id so the next one is unique
     setComponentId(componentId + 1);
-
     setComponents(newComp);
   }
 
@@ -66,75 +67,7 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CenteredDiv>
-        {componentList === undefined
-        ? <CircularProgress />
-        : <DragDropContext
-            onDragEnd={({destination, source, draggableId}) => {
-              if(!destination || destination.index === source.index) return;
-
-              const newIds = components.map(item => item.id);
-              newIds.splice(source.index, 1);
-              newIds.splice(destination.index, 0, draggableId);
-
-              // not a fan of the conversion here, but it tricks the type detection and nothing in there should be undefined anyways, sooo
-              const newData = newIds.map(id => components.find(item => item.id === id)).filter(item => item !== undefined) as ResumeNode[];
-              setComponents(newData);
-            }}
-          >
-            <Container style={{width: '100%'}}>
-              <Droppable droppableId='component-list'>
-                {(provided) => ( 
-                  <ComponentList
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                  >
-                    {components.map((comp, index) => ( 
-                      <ResumeComponent
-                        component={comp.component}
-                        variables={Object.keys(comp.variables)}
-                        id={comp.id}
-                        index={index}
-                        key={comp.id}
-                        components={componentList.map(comp => comp.name)}
-
-                        onUpdateComponent={(id, name) => {
-                          const index = components.findIndex(comp => comp.id === id);
-                          const component = componentList.find(item => item.name === name);
-
-                          const newComp = components.slice();
-
-                          if(component === undefined) {
-                            // error condition
-                            newComp[index].variables = {};
-                          } else {
-                            newComp[index].component = component.name;
-                            newComp[index].variables = component.variables.reduce((prev, next) => {
-                              prev[next] = '';
-                              return prev;
-                            }, {} as KeyValues<string>);
-                          }
-
-                          // force a re-render
-                          setComponents(newComp);
-                        }}
-                        onDeleteComponent={(id) => setComponents(components.filter(comp => comp.id !== id))}
-                      />
-                    ))}
-                    {provided.placeholder}
-                  </ComponentList>
-                )}
-              </Droppable>
-              <div style={{width: '100%', display: 'flex', flexFlow: 'row nowrap', justifyContent: 'center'}}>
-                <IconButton color='primary' size='large'
-                  onClick={addComponent}>
-                  <Add />
-                </IconButton>
-              </div>
-            </Container>
-          </DragDropContext>
-        }
-      </CenteredDiv>
+      <ResumeInput />
     </ThemeProvider>
   );
 }
