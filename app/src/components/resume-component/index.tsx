@@ -14,17 +14,17 @@ type ResumeComponent = {
   index: number;
   components: string[];
 
-  onUpdateComponent: (arg0: string, arg1: string) => void;
-  onDeleteComponent: (arg0: string) => void;
+  onUpdateComponent: (id: string, component: string) => void;
+  onUpdateVariable?: (id: string, variable: string, value: string) => void;
+
+  onDeleteComponent: (id: string) => void;
 }
 
 const ResumeComponent = ({
   component, variables, id, index, components,
-  onUpdateComponent, onDeleteComponent
+  onUpdateComponent, onUpdateVariable, onDeleteComponent
 }: ResumeComponent) => {
   const [compDisplay, setCompDisplay] = useState<string>(component);
-  
-  const [expanded, setExpanded] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
 
   const updateComponent = (comp: string) => {
@@ -41,8 +41,7 @@ const ResumeComponent = ({
   return (
     <Draggable draggableId={id} index={index}>
       {provided => (
-        <Accordion sx={{padding: '0.5rem'}} expanded={expanded} onChange={(e, exp) => setExpanded(exp)}
-          {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
+        <Accordion sx={{padding: '0.5rem'}} {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
           <AccordionSummary expandIcon={<ExpandMore />}>
             <FormGroup row
               sx={{width: '100%', display: 'flex', flexFlow: 'row nowrap', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -81,7 +80,8 @@ const ResumeComponent = ({
                   {variables.map(name => (
                     <TableRow key={name} sx={{width: '100%'}}>
                       <TableCell sx={{width: '70%'}}>
-                        <TextField id={`${name}-text-input`} label={name} variant='standard' />
+                        <TextField id={`${name}-text-input`} label={name} variant='standard'
+                          onChange={e => onUpdateVariable && onUpdateVariable(id, name, e.target.value)} />
                       </TableCell>
                       <TableCell align='right' sx={{width: '30%'}}>
                         actions go here

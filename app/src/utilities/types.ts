@@ -23,12 +23,14 @@ export type ThemeVariableOptions = {
 
 export type Component = {
   name: string;
+  key: string;
   variables: string[];
 };
 
 export type ResumeNode = {
   component: string;
   variables: KeyValues<string>;
+  name: string;
   id: string;
 }
 
