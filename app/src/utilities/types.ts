@@ -29,7 +29,7 @@ export type Component = {
 
 export type ResumeNode = {
   component: string;
-  variables: KeyValues<string>;
+  variables: KeyValues<string | string[]>;
   name: string;
   id: string;
 }

@@ -5,7 +5,9 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import { Accordion, AccordionDetails, AccordionSummary, FormControl, FormGroup, FormHelperText,
   IconButton, InputLabel, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableRow, TextField } from '@mui/material';
-import { Delete, ExpandMore } from '@mui/icons-material';
+import { Add, Delete, ExpandMore } from '@mui/icons-material';
+
+import VariableRow from 'components/variable-row';
 
 type ResumeComponent = {
   component: string;
@@ -15,7 +17,7 @@ type ResumeComponent = {
   components: string[];
 
   onUpdateComponent: (id: string, component: string) => void;
-  onUpdateVariable?: (id: string, variable: string, value: string) => void;
+  onUpdateVariable?: (id: string, variable: string, value: string | string[]) => void;
 
   onDeleteComponent: (id: string) => void;
 }
@@ -78,15 +80,8 @@ const ResumeComponent = ({
               <Table>
                 <TableBody>
                   {variables.map(name => (
-                    <TableRow key={name} sx={{width: '100%'}}>
-                      <TableCell sx={{width: '70%'}}>
-                        <TextField id={`${name}-text-input`} label={name} variant='standard'
-                          onChange={e => onUpdateVariable && onUpdateVariable(id, name, e.target.value)} />
-                      </TableCell>
-                      <TableCell align='right' sx={{width: '30%'}}>
-                        actions go here
-                      </TableCell>
-                    </TableRow>
+                    <VariableRow componentId={id} variableName={name} 
+                      onChange={onUpdateVariable} />
                   ))}
                 </TableBody>
               </Table>
