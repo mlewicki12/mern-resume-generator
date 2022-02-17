@@ -1,4 +1,7 @@
 ---
-- style:
-  op: import
+- op: compile
+  comp: scss
+  file: style.scss
+  out: style.css
+- op: import
   file: style.css

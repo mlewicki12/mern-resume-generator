@@ -82,18 +82,6 @@ const ResumeInput = ({
       .catch(err => console.error(err));
   }, []);
 
-  const isEqual = (list: ResumeNode[], other: ResumeNode[]) => {
-    if(list.length !== other.length) {
-      return false;
-    }
-
-    const val = list.find((item, index) => {
-      const eq = deepEqual(item, other[index]);
-      return !eq;
-    });
-    return !val;
-  }
-
   const handleGenerate = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/resume`, {
       theme: 'default',
@@ -187,7 +175,7 @@ const ResumeInput = ({
               <Add />
             </IconButton>
             {components.length > 0 &&
-              <CenteredDiv style={{width: '100%', justifyContent: 'space-between'}}>
+              <CenteredDiv style={{width: '100%', justifyContent: 'space-between', marginTop: '2rem'}}>
                 <Button size='large' variant='contained' sx={{margin: '0.25rem'}}>Save</Button>
                 <Button size='large' variant='contained' sx={{margin: '0.25rem'}}>Export</Button>
                 <Button onClick={handleGenerate}
