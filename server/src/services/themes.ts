@@ -4,6 +4,7 @@ import fs from 'fs';
 
 import { GenerateOperation, KeyValues, Theme, ThemeNode } from '../utilities/types';
 import { RESOURCES } from '../utilities/constants';
+import { getDir } from './resume';
 
 const getThemeDir: (theme: string | Theme) => string = (theme) => {
   const name = typeof theme === 'string' ? theme : theme.name;
@@ -113,3 +114,47 @@ export const importThemeFile: (theme: string | Theme, file: string, dest: string
     });
   });
 }
+
+export const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
+  return new Promise((resolve, reject) => {
+    fs.access(`${theme.path}/${name}.liquid`, fs.constants.F_OK, (err) => {
+      if(err) {
+        reject(err);
+        return;
+      }
+
+      fs.readFile(`${theme.path}/${name}.liquid`, (err, data) => {
+        // TODO: custom callback type to avoid having to type this shit
+        if(err) {
+          reject(err);
+          return;
+        }
+
+        theme.components[name].liquid = data.toString();
+        resolve(data.toString());
+      });
+    });
+  });
+}
+
+export const handleThemeGenerate: (theme: Theme, name: string, resolve: (value: string | PromiseLike<string>) => void, reject: (reason?: any) => void) => void =
+  (theme, name, resolve, reject) => {
+    const dir = getDir(name);
+    loadGenerate(theme)
+      .then(data => {
+        const steps: Promise<void>[] = data.map(step => {
+          switch(step.op) {
+            case 'import':
+              return importThemeFile(theme, step.file, dir);
+
+            default:
+              console.warn(`unknown operation ${step.op}, skipping`);
+              return Promise.resolve();
+          }
+        });
+
+        Promise.all(steps)
+          .then(() => resolve(`${name}`))
+          .catch(err => reject(err));
+      })
+  }

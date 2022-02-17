@@ -1,0 +1,34 @@
+---
+types:
+  - name: Section
+    key: section
+    variables:
+      - title
+      - company
+      - location
+      - dates
+      - list
+
+header:
+  name: Header
+  variables:
+    - name: name
+      type: string
+    - name: position
+      type: string
+    - name: info
+      type: string
+
+summary:
+  name: Summary
+  variables:
+    - name: body
+      type: string
+
+section:
+  name: Section
+  variables:
+    - name: title
+      type: string
+    - name: sections
+      type: section

@@ -1,0 +1,13 @@
+
+<div class='header'>
+  <div>
+    <h1 class='name'>{{ name }}</h1>
+    <p class='title'>{{ position }}</p>
+  </div>
+
+  <div>
+    {% for item in info %}
+      <p class='info'>{{ item }}</p>
+    {% endfor %}
+  </div>
+</div>

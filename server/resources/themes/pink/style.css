@@ -1,0 +1,113 @@
+
+body {
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+main {
+  padding: 1rem;
+}
+
+ul {
+  list-style: none;
+}
+
+ul li::before {
+  content: "\2022";
+  color: #B2436F;
+  display: inline-block;
+  width: 1em;
+  marign-left: -1em;
+}
+
+ul li {
+  padding: 0.15rem;
+}
+
+.header {
+  padding: 1rem;
+  padding-top: 1.5rem;
+
+  background-color: #B2436F;
+  color: white;
+
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .name {
+  font-size: 3.5rem;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.header .title {
+  margin-top: 0.75rem;
+}
+
+.header .info {
+  font-size: 0.85rem;
+  font-weight: 300;
+  padding: 0.15rem;
+  letter-spacing: 2px;
+}
+
+.summary {
+  color: #B2436F;
+  padding: 0.5rem;
+}
+
+.section {
+  width: 100%;
+  border-top: 0.5rem solid #B2436F;
+  margin-top: 1rem;
+
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.section .title {
+  font-size: 1.1rem;
+  padding: 0.5rem 1rem 0 0.5rem;
+  color: #B2436F;
+  max-width: 10%;
+  width: 10%;
+}
+
+.section .content {
+  padding: 0.5rem;
+  width: 90%;
+}
+
+.section .content .content-section {
+  padding: 0.3rem 0.5rem 0.5rem 0.5rem;
+  font-size: 0.90rem;
+}
+
+.section .content .content-section:last-child {
+  padding-bottom: 0;
+}
+
+.section .content .content-section .content-list {
+  list-style-position: inside;
+}
+
+.section .content .content-title {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 1rem;
+  width: 100%;
+  font-size: 0.95rem;
+}
+
+.section .content .job-title {
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.section .content .company {
+  text-align: right;
+}

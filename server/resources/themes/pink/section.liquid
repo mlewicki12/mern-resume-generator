@@ -1,0 +1,19 @@
+
+<div class="section">
+  <h2 class="title">{{ title }}</h2>
+  <div class="content">
+    {% for section in sections %}
+      <div class="content-section">
+        <div class="content-title">
+          <span class="job-title">{{ section.title }}</span>
+          <p class="company">{{ section.company }}, {{ section.location }} / {{ section.dates }}</p>
+        </div>
+        <ul class="content-list">
+          {% for text in section.list %}
+            <li>{{ text }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+</div>
