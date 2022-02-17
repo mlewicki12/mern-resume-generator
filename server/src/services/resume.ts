@@ -2,11 +2,9 @@
 import fs from 'fs';
 
 import liquid from '../liquid';
-import { handleThemeGenerate, importThemeFile, loadComponent, loadGenerate, loadTheme } from './themes';
-import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
+import { handleThemeGenerate, loadComponent, loadTheme } from './themes';
+import { KeyValues, ResumeRequest, ThemeNode } from '../utilities/types';
 import { ASSETS } from '../utilities/constants';
-import { create } from 'domain';
-import { callbackify } from 'util';
 
 const generateComponent = async (dir: string, component: ThemeNode, values: KeyValues<string>) => {
   return new Promise<any>((resolve, reject) => {

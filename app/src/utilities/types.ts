@@ -12,13 +12,12 @@ export type Theme = {
 export type ThemeNode = {
   name: string;
   // will be its own type eventually
-  variables: string[];
+  variables: ThemeVariable[];
 }
 
-export type ThemeVariableOptions = {
-  optional?: boolean;
-  multiple?: boolean;
-  image?: boolean;
+export type ThemeVariable = {
+  name: string;
+  type: string;
 }
 
 export type Component = {

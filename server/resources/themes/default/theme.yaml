@@ -2,47 +2,89 @@
 header:
   name: Header
   variables:
-    - profile
-    - name
-    - position
-    - info
+    - name: profile
+      type: asset
+
+    - name: name
+      type: string
+
+    - name: position
+      type: string
+
+    - name: info
+      type: string list
 
 job:
   name: Work Experience
   variables:
-    - company
-    - location
-    - title
-    - start
-    - end
-    - responsibilities
+    - name: company
+      type: string
+
+    - name: location
+      type: string
+
+    - name: title
+      type: string
+
+    - name: start
+      type: string
+
+    - name: end
+      type: string
+
+    - name: responsibilities
+      type: string list
 
 uni:
   name: Education
   variables:
-    - university
-    - location
-    - degree
-    - start
-    - end
-    - gpa
-    - coursework
-    - awards
-    - extracurriculars
+    - name: university
+      type: string
+
+    - name: location
+      type: string
+
+    - name: degree
+      type: string
+
+    - name: start
+      type: string
+
+    - name: end
+      type: string
+
+    - name: gpa
+      type: number
+
+    - name: coursework
+      type: string list
+
+    - name: awards
+      type: string list
+
+    - name: extracurriculars
+      type: string list
 
 summary:
   name: Summary
   variables:
-    - body
+    - name: body
+      type: string
 
 extra:
   name: Extra
   variables:
-    - description
-    - start
-    - end
+    - name: description
+      type: string
+
+    - name: start
+      type: string
+
+    - name: end
+      type: string
 
 separator:
   name: Separator
   variables:
-    - title
+    - name: title
+      type: string

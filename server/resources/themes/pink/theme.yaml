@@ -14,8 +14,10 @@ header:
   variables:
     - name: name
       type: string
+
     - name: position
       type: string
+
     - name: info
       type: string
 
@@ -30,5 +32,6 @@ section:
   variables:
     - name: title
       type: string
+
     - name: sections
       type: section

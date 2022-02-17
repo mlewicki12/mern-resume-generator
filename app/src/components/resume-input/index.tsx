@@ -2,14 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
-import deepEqual from 'deep-equal';
 
 import { Button, CircularProgress, IconButton } from '@mui/material';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import ResumeComponent from 'components/resume-component';
 import { Container, CenteredDiv } from 'utilities/styled';
-import { Component, ResumeNode, KeyValues } from 'utilities/types';
+import { Component, ResumeNode, KeyValues, ThemeNode } from 'utilities/types';
 import { Add } from '@mui/icons-material';
 
 const ComponentList = styled.div`
@@ -70,11 +69,11 @@ const ResumeInput = ({
     // TODO: learn how to type axios responses
     axios.get(`${process.env.REACT_APP_API_URL}/api/themes/default`)
       .then(response => {
-        const components = response.data.components;
+        const components = response.data.components as KeyValues<ThemeNode>;
         const newData = Object.keys(components).map(key => ({
           name: components[key].name,
           key: key,
-          variables: components[key].variables
+          variables: components[key].variables.map(item => item.name)
         }));
 
         setComponentList(newData);

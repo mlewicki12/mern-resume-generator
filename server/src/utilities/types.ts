@@ -20,13 +20,25 @@ export type Theme = {
   name: string;
   path: string;
   components: KeyValues<ThemeNode>;
+  types?: ThemeType[];
+}
+
+export type ThemeType = {
+  name: string;
+  key: string;
+  variables: KeyValues<ThemeVariable>;
+}
+
+export type ThemeVariable = {
+  name: string;
+  type: string;
 }
 
 export type ThemeNode = {
   name: string;
   liquid: string;
   // will be its own type eventually
-  variables: string[];
+  variables: ThemeVariable[];
 }
 
 export type ThemeVariableOptions = {

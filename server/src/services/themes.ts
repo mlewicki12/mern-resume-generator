@@ -42,12 +42,16 @@ export const loadTheme: (name: string) => Promise<Theme> = (name) => {
         try {
           const theme = yaml.load(
             data.toString()
-          ) as KeyValues<ThemeNode>;
+          ) as any;
+
+          const types = theme.types;
+          delete theme.types;
 
           resolve({
             name,
             path,
-            components: theme
+            components: theme as KeyValues<ThemeNode>,
+            types
           });
         } catch {
           reject(`unable to parse ${name} theme file`);
