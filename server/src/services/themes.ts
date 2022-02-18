@@ -44,14 +44,12 @@ export const loadTheme: (name: string) => Promise<Theme> = (name) => {
             data.toString()
           ) as any;
 
-          const types = theme.types;
-          delete theme.types;
-
           resolve({
             name,
             path,
-            components: theme as KeyValues<ThemeNode>,
-            types
+            components: theme.components as KeyValues<ThemeNode>,
+            types: theme.types,
+            layout: theme.layout
           });
         } catch {
           reject(`unable to parse ${name} theme file`);

@@ -1,37 +1,49 @@
 ---
+layout: root.liquid
+
 types:
   - name: Section
     key: section
     variables:
-      - title
-      - company
-      - location
-      - dates
-      - list
+      - name: title
+        type: string
 
-header:
-  name: Header
-  variables:
-    - name: name
-      type: string
+      - name: company
+        type: string
 
-    - name: position
-      type: string
+      - name: location
+        type: string
 
-    - name: info
-      type: string
+      - name: dates
+        type: string
 
-summary:
-  name: Summary
-  variables:
-    - name: body
-      type: string
+      - name: list
+        type: string
 
-section:
-  name: Section
-  variables:
-    - name: title
-      type: string
+components:
+  header:
+    name: Header
+    variables:
+      - name: name
+        type: string
 
-    - name: sections
-      type: section
+      - name: position
+        type: string
+
+      - name: info
+        type: string
+
+  summary:
+    name: Summary
+    variables:
+      - name: body
+        type: string
+
+  section:
+    name: Section
+    variables:
+      - name: title
+        type: string
+
+      - name: sections
+        type: section

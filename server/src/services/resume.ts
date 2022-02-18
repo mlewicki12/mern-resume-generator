@@ -3,8 +3,8 @@ import fs from 'fs';
 
 import liquid from '../liquid';
 import { handleThemeGenerate, loadComponent, loadTheme } from './themes';
-import { KeyValues, ResumeRequest, ThemeNode } from '../utilities/types';
-import { ASSETS } from '../utilities/constants';
+import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
+import { ASSETS, DEBUG } from '../utilities/constants';
 
 const generateComponent = async (dir: string, component: ThemeNode, values: KeyValues<string>) => {
   return new Promise<any>((resolve, reject) => {
@@ -50,21 +50,35 @@ const createWorkDir = (name: string, reject: (reason: NodeJS.ErrnoException | st
   callback: () => void) => {
     const dir = getDir(name);
     fs.mkdir(dir, err => {
-      if(err) {
-        reject(err);
-        return;
-      }
+      if(err) return reject(err);
 
       callback();
     });
 }
 
 const cleanWorkDir = (name: string, callback: fs.NoParamCallback) => {
+  if(DEBUG) return;
+
   const dir = getDir(name);
   fs.rm(dir, {
     recursive: true,
     force: true
   }, callback);
+}
+
+const importLayout = (name: string, theme: Theme) => {
+  return new Promise<void>((resolve, reject) => {
+    if(!theme.layout) return resolve();
+
+    fs.access(`${theme.path}/${theme.layout}`, fs.constants.F_OK, (err) => {
+      if(err) return reject(err);
+
+      fs.copyFile(`${theme.path}/${theme.layout}`, `resources/layouts/${name}.liquid`, (err) => {
+        if(err) return reject(err);
+        resolve();
+      })
+    });
+  });
 }
 
 const copyFiles = (name: string, path: string, reject: (reason: NodeJS.ErrnoException | string) => void,
@@ -88,6 +102,18 @@ const handleGenerate = (name: string, component: ThemeNode, variables: KeyValues
       .catch(err => reject(err));
 }
 
+const deleteWorkingFiles = (name: string) => {
+  // delete working liquid files
+  fs.unlinkSync(`public/resumes/${name}/out.liquid`);
+
+  fs.access(`resources/layouts/${name}.liquid`, fs.constants.F_OK, (err) => {
+    if(err) return;
+
+    // remove temporary layout file as needed
+    fs.unlinkSync(`resources/layouts/${name}.liquid`);
+  })
+}
+
 const useLayout = (name: string, reject: (reason: NodeJS.ErrnoException | string) => void, data: string, callback: () => void) => {
   const dir = getDir(name);
 
@@ -98,13 +124,13 @@ const useLayout = (name: string, reject: (reason: NodeJS.ErrnoException | string
     .then(render => {
       fs.writeFileSync(`${dir}/index.html`, render);
 
-      // delete working liquid files
-      fs.unlinkSync(`public/resumes/${name}/root.liquid`);
-      fs.unlinkSync(`public/resumes/${name}/out.liquid`);
+      if(!DEBUG) deleteWorkingFiles(name);
 
       callback();
     })
-    .catch(err => reject(err));
+    .catch(err => {
+      reject(err);
+    });
 }
 
 export const generate = async (body: ResumeRequest) => {
@@ -117,52 +143,49 @@ export const generate = async (body: ResumeRequest) => {
     // thrown here as an afterthought bc i don't wanna rename everything
     // but this will clear all work files on error
     const reject = (reason: NodeJS.ErrnoException | string) => cleanWorkDir(name, () => rej(reason));
-    createWorkDir(name, reject, () => {
-      copyFiles(name, './resources/layouts/root.liquid', reject, async () => {
-        loadTheme(body.theme ?? 'default')
-          .then(theme => {
-            if(!theme) {
-              reject(`error reading ${body.theme} theme`);
-              return;
-            }
+    createWorkDir(name, reject, async () => {
+      loadTheme(body.theme ?? 'default')
+        .then(theme => {
+          if(!theme) return reject(`error reading ${body.theme} theme`);
+          if (!body.components) return reject('no resume components provided');
 
-            if (!body.components) {
-              reject('no resume components provided');
-              return;
-            }
+          // body should be given an array of element names and variables
+          const generated = body.components.map(item => {
+            return new Promise<string>((resolve, reject) => {
+              if(!item.component || !theme.components[item.component]) {
+                resolve(`<h1 style="color:red">Missing theme component ${item.component}</h1>`);
+              }
 
-            // body should be given an array of element names and variables
-            const generated = body.components.map(item => {
-              return new Promise<string>((resolve, reject) => {
-                if(!item.component || !theme.components[item.component]) {
-                  resolve(`<h1 style="color:red">Missing theme component ${item.component}</h1>`);
-                }
-
-                if(!theme.components[item.component].liquid) {
-                  loadComponent(theme, item.component)
-                    .then(data => handleGenerate(name, theme.components[item.component], item.variables, resolve, reject))
-                    .catch(err => reject(err));
-                } else {
-                  handleGenerate(name, theme.components[item.component], item.variables, resolve, reject);
-                }
-              })
-            });
-
-            // store the built theme and drop it in the default layout
-            Promise.all(generated)
-              .then(async data => {
-                const output = data.reduce((prev, item) => {
-                  return prev + item;
-                }, '{% layout \'root.liquid\' %}\n{% block content %}') + '\n{% endblock %}';
-
-                useLayout(name, reject, output, () => handleThemeGenerate(theme, name, resolve, reject));
-              })
-              .catch(err => {
-                reject(err);
-              });
+              if(!theme.components[item.component].liquid) {
+                loadComponent(theme, item.component)
+                  .then(data => handleGenerate(name, theme.components[item.component], item.variables, resolve, reject))
+                  .catch(err => reject(err));
+              } else {
+                handleGenerate(name, theme.components[item.component], item.variables, resolve, reject);
+              }
             })
-            .catch(err => reject(err));
-      });
+          });
+
+          // store the built theme and drop it in the layout
+          Promise.all(generated)
+            .then(async data => {
+              const output = data.reduce((prev, item) => {
+                return prev + item;
+              }, `{% layout \'${theme.layout ? name : 'root'}.liquid\' %}\n{% block content %}`) + '\n{% endblock %}';
+
+              try {
+                importLayout(name, theme)
+              } catch(err) {
+                return reject(err);
+              }
+
+              useLayout(name, reject, output, () => handleThemeGenerate(theme, name, resolve, reject));
+            })
+            .catch(err => {
+              reject(err);
+            });
+          })
+          .catch(err => reject(err));
     });
   });
 }

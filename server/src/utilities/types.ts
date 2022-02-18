@@ -20,6 +20,7 @@ export type Theme = {
   name: string;
   path: string;
   components: KeyValues<ThemeNode>;
+  layout?: string;
   types?: ThemeType[];
 }
 

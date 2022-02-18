@@ -67,7 +67,7 @@ const ResumeInput = ({
 
   useEffect(() => {
     // TODO: learn how to type axios responses
-    axios.get(`${process.env.REACT_APP_API_URL}/api/themes/default`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/themes/pink`)
       .then(response => {
         const components = response.data.components as KeyValues<ThemeNode>;
         const newData = Object.keys(components).map(key => ({
@@ -83,7 +83,7 @@ const ResumeInput = ({
 
   const handleGenerate = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/resume`, {
-      theme: 'default',
+      theme: 'pink',
       components: components
     })
       .then(response => {
