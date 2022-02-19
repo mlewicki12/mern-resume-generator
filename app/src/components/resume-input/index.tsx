@@ -30,7 +30,7 @@ const ResumeInput = ({
   const [componentList, setComponentList] = useState<Component[]>([]);
   const [components, setComponents] = useState<ResumeNode[]>([]);
 
-  const [generatedValues, setGeneratedValues] = useState<ResumeNode[]>([]);
+  const [theme, setTheme] = useState<string>('default');  
 
   // use a state variable to keep track of next assigned value
   const [componentId, setComponentId] = useState<number>(0);
@@ -67,7 +67,7 @@ const ResumeInput = ({
 
   useEffect(() => {
     // TODO: learn how to type axios responses
-    axios.get(`${process.env.REACT_APP_API_URL}/api/themes/pink`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/themes/${theme}`)
       .then(response => {
         const components = response.data.components as KeyValues<ThemeNode>;
         const newData = Object.keys(components).map(key => ({
@@ -83,7 +83,7 @@ const ResumeInput = ({
 
   const handleGenerate = () => {
     axios.post(`${process.env.REACT_APP_API_URL}/api/resume`, {
-      theme: 'pink',
+      theme: theme,
       components: components
     })
       .then(response => {

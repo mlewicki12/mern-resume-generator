@@ -1,10 +1,12 @@
 
 import yaml from 'js-yaml';
 import fs from 'fs';
+import sass from 'sass';
 
 import { GenerateOperation, KeyValues, Theme, ThemeNode } from '../utilities/types';
 import { RESOURCES } from '../utilities/constants';
 import { getDir } from './resume';
+import { compile } from './compile';
 
 const getThemeDir: (theme: string | Theme) => string = (theme) => {
   const name = typeof theme === 'string' ? theme : theme.name;
@@ -117,6 +119,22 @@ export const importThemeFile: (theme: string | Theme, file: string, dest: string
   });
 }
 
+export const compileAndImport: (theme: string | Theme, file: string, dest: string, from: string, out: string) => Promise<void> = (theme, file, dest, from, out) => {
+  return new Promise((resolve, reject) => {
+    const path = getThemeDir(theme);
+
+    fs.access(`${path}/${file}`, fs.constants.F_OK, (err) => {
+      if(err) return reject(err);
+
+      const compiled = compile(`${path}/${file}`, from);
+      if(compiled.err) return reject(compiled.err);
+
+      fs.writeFileSync(`${dest}/${out}`, compiled.result);
+      resolve();
+    });
+  });
+}
+
 export const loadComponent: (theme: Theme, name: string) => Promise<string> = (theme, name) => {
   return new Promise((resolve, reject) => {
     fs.access(`${theme.path}/${name}.liquid`, fs.constants.F_OK, (err) => {
@@ -147,11 +165,16 @@ export const handleThemeGenerate: (theme: Theme, name: string, resolve: (value: 
         const steps: Promise<void>[] = data.map(step => {
           switch(step.op) {
             case 'import':
+              if(!step.file) return Promise.reject(`no file provided for import operation`);
               return importThemeFile(theme, step.file, dir);
 
+            case 'compile':
+              // need more info here depending on which check failed
+              if(!step.file || !step.from || !step.out) return Promise.reject(`no file provided for compile operation`);
+              return compileAndImport(theme, step.file, dir, step.from, step.out);
+
             default:
-              console.warn(`unknown operation ${step.op}, skipping`);
-              return Promise.resolve();
+              return Promise.reject(`unknown operation ${step.op}`);
           }
         });
 

@@ -69,7 +69,9 @@ export type AssetFile = {
 }
 
 export type GenerateOperation = {
-  op: 'import';
+  op: 'import' | 'compile';
+  from?: string;
   file?: string;
+  out?: string;
   pre?: string;
 }

@@ -1,90 +1,91 @@
 ---
-header:
-  name: Header
-  variables:
-    - name: profile
-      type: asset
+components:
+  header:
+    name: Header
+    variables:
+      - name: profile
+        type: asset
 
-    - name: name
-      type: string
+      - name: name
+        type: string
 
-    - name: position
-      type: string
+      - name: position
+        type: string
 
-    - name: info
-      type: string list
+      - name: info
+        type: string list
 
-job:
-  name: Work Experience
-  variables:
-    - name: company
-      type: string
+  job:
+    name: Work Experience
+    variables:
+      - name: company
+        type: string
 
-    - name: location
-      type: string
+      - name: location
+        type: string
 
-    - name: title
-      type: string
+      - name: title
+        type: string
 
-    - name: start
-      type: string
+      - name: start
+        type: string
 
-    - name: end
-      type: string
+      - name: end
+        type: string
 
-    - name: responsibilities
-      type: string list
+      - name: responsibilities
+        type: string list
 
-uni:
-  name: Education
-  variables:
-    - name: university
-      type: string
+  uni:
+    name: Education
+    variables:
+      - name: university
+        type: string
 
-    - name: location
-      type: string
+      - name: location
+        type: string
 
-    - name: degree
-      type: string
+      - name: degree
+        type: string
 
-    - name: start
-      type: string
+      - name: start
+        type: string
 
-    - name: end
-      type: string
+      - name: end
+        type: string
 
-    - name: gpa
-      type: number
+      - name: gpa
+        type: number
 
-    - name: coursework
-      type: string list
+      - name: coursework
+        type: string list
 
-    - name: awards
-      type: string list
+      - name: awards
+        type: string list
 
-    - name: extracurriculars
-      type: string list
+      - name: extracurriculars
+        type: string list
 
-summary:
-  name: Summary
-  variables:
-    - name: body
-      type: string
+  summary:
+    name: Summary
+    variables:
+      - name: body
+        type: string
 
-extra:
-  name: Extra
-  variables:
-    - name: description
-      type: string
+  extra:
+    name: Extra
+    variables:
+      - name: description
+        type: string
 
-    - name: start
-      type: string
+      - name: start
+        type: string
 
-    - name: end
-      type: string
+      - name: end
+        type: string
 
-separator:
-  name: Separator
-  variables:
-    - name: title
-      type: string
+  separator:
+    name: Separator
+    variables:
+      - name: title
+        type: string
