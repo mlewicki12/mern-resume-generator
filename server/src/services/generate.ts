@@ -6,6 +6,7 @@ import ThemeService from './themes';
 import { Theme, GenerateOperation } from '../utilities/types';
 import { FileExists } from '../utilities/functions';
 import CompileService from './compile';
+import ResumeService from './resume';
 
 /**
  * Service for dealing with theme generate files
@@ -37,17 +38,21 @@ const GenerateService = {
       })
     });
   },
-  
-  HandleCompile(theme: string | Theme, dir: string, op: GenerateOperation) {
+
+  HandleCompile(theme: string | Theme, name: string, op: GenerateOperation) {
     return new Promise<void>((resolve, reject) => {
       const path = ThemeService.GetThemeDir(theme);
+      const outpath = ResumeService.GetDirectory(name);
 
       FileExists(`${path}/${op.file}`).then(exists => {
         if(!exists) return reject(`unable to find file ${op.file} in theme ${ThemeService.GetThemeName(theme)}`);
 
         CompileService.Compile(`${path}/${op.file}`, op.from).then(result => {
-          fs.writeFile(`${dir}/${op.out}`, result, (err) => {
-            if(err) return reject(`unable to write to file ${op.out}`);
+          fs.writeFile(`${outpath}/${op.out}`, result, (err) => {
+            if(err) {
+              console.error(err);
+              return reject(`unable to write to file ${op.out}`);
+            }
 
             resolve();
           })
@@ -64,12 +69,12 @@ const GenerateService = {
             switch(step.op) {
               case 'import':
                 if(!step.file) return Promise.reject(`no file provided for import operation`);
-                return ThemeService.ImportThemeFile(theme, step.file, '');
+                return ThemeService.ImportThemeFile(theme, step.file, name);
 
               case 'compile':
                 // need more info here depending on which check failed
                 if(!step.file || !step.from || !step.out) return Promise.reject(`no file provided for compile operation`);
-                return GenerateService.HandleCompile(theme, '', step);
+                return GenerateService.HandleCompile(theme, name, step);
 
               default:
                 return Promise.reject(`unknown operation ${step.op}`);

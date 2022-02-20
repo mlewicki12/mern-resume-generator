@@ -1,26 +1,30 @@
 
 import sass from 'sass';
 
-export type CompileResult = {
-  err: any;
-  result: string;
+const CompileService = {
+  CompileSASS(path: string) {
+    return new Promise<string>((resolve, reject) => {
+      sass.compileAsync(path).then(result => {
+        resolve(result.css);
+      }).catch(err => {
+        reject(`unable to compile sass file ${path}`);
+      });
+    });
+  },
+
+  Compile(path: string, compiler: string) {
+    switch(compiler) {
+      // i don't really know the difference between sass and scss
+      // should look into it
+      // TODO: look into it
+      case 'sass':
+      case 'scss':
+        return CompileService.CompileSASS(path);
+
+      default:
+        return Promise.resolve('');
+    }
+  },
 }
 
-export const compile: (path: string, compiler: string) => CompileResult = (path, compiler) => {
-  switch(compiler) {
-    // i don't really know the difference between sass and scss
-    // should look into it
-    // TODO: look into it
-    case 'sass':
-    case 'scss':
-      let compiled: sass.CompileResult;
-      try {
-        compiled = sass.compile(`${path}`);
-        return {err: undefined, result: compiled.css};
-      } catch(e) {
-        console.error(e);
-        return {err: `error occured while compiling ${path}`, result: undefined};
-      }
-
-  }
-}
+export default CompileService;

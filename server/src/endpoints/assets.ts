@@ -2,7 +2,7 @@
 import multer from 'multer';
 
 import { Controller } from '../utilities/types';
-import { getAssetList } from '../services/assets';
+import AssetService from '../services/assets';
 import { ASSETS } from '../utilities/constants';
 
 const storage = multer.diskStorage({
@@ -32,7 +32,7 @@ const Assets: Controller = [
     route: '',
     method: 'GET',
     callback: async (req, res) => {
-      getAssetList()
+      AssetService.GetAssetList()
         .then(files => {
           res.status(200).send(files);
         })

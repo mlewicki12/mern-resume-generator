@@ -2,14 +2,14 @@
 import { Request } from 'express';
 
 import { Controller } from '../utilities/types';
-import { readThemes, loadTheme } from '../services/themes';
+import ThemeService from '../services/themes';
 
-const Resume: Controller = [
+const Themes: Controller = [
   {
     route: '',
     method: 'GET',
     callback: async (req, res) => {
-      readThemes()
+      ThemeService.ReadThemes()
         .then(data => res.status(200).send(data))
         // sending the error is not the best practice, but it'll do for now
         .catch(err => {
@@ -22,7 +22,7 @@ const Resume: Controller = [
     route: ':name',
     method: 'GET',
     callback: async (req: Request<{name: string}>, res) => {
-      loadTheme(req.params.name)
+      ThemeService.LoadTheme(req.params.name)
         .then(data => res.status(200).send(data))
         .catch(err => {
           console.error(err);
@@ -32,4 +32,4 @@ const Resume: Controller = [
   }
 ]
 
-export default Resume;
+export default Themes;
