@@ -1,7 +1,6 @@
 
 import yaml from 'js-yaml';
 import fs from 'fs';
-import sass from 'sass';
 
 import { GenerateOperation, KeyValues, Theme, ThemeNode } from '../utilities/types';
 import { RESOURCES } from '../utilities/constants';

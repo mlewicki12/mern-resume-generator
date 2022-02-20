@@ -10,6 +10,7 @@ export const compile: (path: string, compiler: string) => CompileResult = (path,
   switch(compiler) {
     // i don't really know the difference between sass and scss
     // should look into it
+    // TODO: look into it
     case 'sass':
     case 'scss':
       let compiled: sass.CompileResult;
