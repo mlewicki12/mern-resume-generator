@@ -1,9 +1,8 @@
 
 import { Liquid } from 'liquidjs';
+import logger from '../utilities/logger';
 
 const registerFilters = (liquidEngine: Liquid) => {
-  console.log('registering liquid filters');
-
   // not great and needs futher implementation,
   // but this will do for now
   liquidEngine.registerFilter('type', (item: string | string[]) => {
@@ -18,6 +17,7 @@ const registerFilters = (liquidEngine: Liquid) => {
     return 'string';
   });
 
+  logger.info('done registering liquid filters');
 }
 
 export default registerFilters;

@@ -1,12 +1,13 @@
 
-import express, { RequestHandler } from 'express';
+import config from 'config';
+import express from 'express';
 import fs from 'fs';
 
 import { Endpoint } from './types';
-import { API, ENDPOINTS } from './constants';
+import logger from './logger';
 
 const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
-  const route = `/${API}/${base}/${info.route}`;
+  const route = `/${config.get('apiPath')}/${base}/${info.route}`;
   switch (info.method) {
     case 'GET':
       app.get(route, ...info.middleware ?? [], info.callback);
@@ -25,15 +26,15 @@ const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
       break;
 
     default:
-      console.error(`unknown operation ${info.method}`);
+      logger.error(`unknown operation ${info.method}`);
       return;
   }
 
-  console.log(`defined ${info.method} handler for /api/${base}/${info.route}`);
+  logger.info(`defined ${info.method} handler for ${route}`);
 }
 
 const buildEndpoints = (app: express.Express, route?: string) => {
-  const endpointsRoute = route ?? ENDPOINTS;
+  const endpointsRoute = route ?? config.get('endpointsDir');
 
   // fs is bad and reads from base directory instead of src/
   const files = fs.readdirSync(`./src/${endpointsRoute}`);
@@ -46,8 +47,8 @@ const buildEndpoints = (app: express.Express, route?: string) => {
       const module = await require(`../${endpointsRoute}/${fileName}`).default;
       module.forEach((endpoint: Endpoint) => defineEndpoint(app, base, endpoint));
     } catch(err) {
-      console.error(`error registering ${item} controller`);
-      console.error(err);
+      logger.error(`error registering ${item} controller`);
+      logger.error(err);
     }
   });
 }

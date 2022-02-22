@@ -1,14 +1,14 @@
 
 import fs from 'fs';
+import config from 'config';
 
 import liquid from '../liquid';
 
-import ThemeService from './themes.service';
-import GenerateService from './generate.service';
-import AssetService from './assets.service';
+import { LoadComponent, LoadTheme } from './themes.service';
+import { Handle } from './generate.service';
+import { ImportAssetFile } from './assets.service';
 
 import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
-import { ASSETS, DEBUG } from '../utilities/constants';
 import { FileExists } from '../utilities/functions';
 
 export function GetDirectory(name: string) {
@@ -38,7 +38,7 @@ export function DeleteWorkingFiles(name: string) {
 
 export function CleanWorkDir(name: string) {
   return new Promise<void>((resolve, reject) => {
-    if(DEBUG) return resolve();
+    if(config.get('debug')) return resolve();
 
     const dir = GetDirectory(name);
     fs.rm(dir, {
@@ -75,13 +75,13 @@ export function UseLayout(name: string, data: string) {
       if(err) return reject('unable to write file');
 
       liquid.renderFile(`${dir}/out.liquid`).then(render => {
-        fs.writeFile(`${dir}/index.html`, render, (err) => {
-          if(err) return reject('error writing final file');
-          if(!DEBUG) DeleteWorkingFiles(name);
+        fs.writeFile(`${dir}/index.html`, render, (error) => {
+          if(error) return reject('error writing final file');
+          if(!config.get('debug')) DeleteWorkingFiles(name);
 
           resolve();
         });
-      }).catch(err => reject('unable to render liquid file'));
+      }).catch(error => reject('unable to render liquid file'));
     });
   })
 }
@@ -93,7 +93,7 @@ export function GenerateComponent(component: ThemeNode, name: string, values: Ke
       // means it's in the assets folder
       if(values[key].startsWith('@asset:')) {
         const file = values[key].slice(7);
-        AssetService.ImportAssetFile(file, `${dir}`).catch(err => reject(err));
+        ImportAssetFile(file, `${dir}`).catch(err => reject(err));
 
         return { key, value: file };
       } else {
@@ -117,12 +117,12 @@ export async function Generate(body: ResumeRequest) {
   return new Promise<string>((resolve, rej) => {
     // clean out all working files on error
     const reject = (reason: NodeJS.ErrnoException | string) =>
-      DEBUG
+      config.get('debug')
       ? rej(reason)
       : CleanWorkDir(name).then(() => rej(reason));
 
     CreateWorkDir(name).then(() => {
-      ThemeService.LoadTheme(body.theme ?? 'default').then(theme => {
+      LoadTheme(body.theme ?? 'default').then(theme => {
         if(!theme) return reject(`couldn't load theme ${body.theme}`);
         if(!body.components) return reject('no resume components provided');
 
@@ -133,7 +133,7 @@ export async function Generate(body: ResumeRequest) {
             if(!theme.components[item.component].liquid) {
               // await here so i don't have to retype load
               // maybe it's not a great model
-              await ThemeService.LoadComponent(theme, item.component)
+              await LoadComponent(theme, item.component)
             }
 
             GenerateComponent(theme.components[item.component], name, item.variables)
@@ -154,7 +154,7 @@ export async function Generate(body: ResumeRequest) {
           }
 
           UseLayout(name, output).then(() => {
-            GenerateService.Handle(theme, name)
+            Handle(theme, name)
             .then(() => resolve(name))
             .catch(err => reject(err));
           }).catch(err => reject(err));

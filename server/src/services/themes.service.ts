@@ -1,8 +1,8 @@
 
 import fs from 'fs';
 import yaml from 'js-yaml';
+import config from 'config';
 
-import { RESOURCES } from '../utilities/constants';
 import { Theme } from '../utilities/types';
 import { FileExists } from '../utilities/functions';
 
@@ -12,15 +12,15 @@ export function GetThemeName(theme: string | Theme) {
 
 export function GetThemeDir(theme: string | Theme) {
   const name = GetThemeName(theme);
-  return `${RESOURCES}/themes/${name}/`;
+  return `${config.get('resourcesDir')}/themes/${name}/`;
 }
 
 export function ReadThemes() {
   return new Promise<string[]>((resolve, reject) => {
-    FileExists(`${RESOURCES}/themes`).then(exists => {
+    FileExists(`${config.get('resourcesDir')}/themes`).then(exists => {
       if(!exists) return resolve([]);
 
-      fs.readdir(`${RESOURCES}/themes`, (err, data) => {
+      fs.readdir(`${config.get('resourcesDir')}/themes`, (err, data) => {
         // reject here bc the directory exists
         if(err) return reject('unable to read themes directory');
 

@@ -1,8 +1,10 @@
 
-import app from './app';
+import config from 'config';
 
-const port = 8080;
-const server = app.listen(port, '127.0.0.1', () => {
+import app from './app';
+import logger from './utilities/logger';
+
+const server = app.listen(config.get('port'), '127.0.0.1', () => {
   let address = server.address();
   if(typeof address !== 'string') {
     const host = address.address;
@@ -12,5 +14,5 @@ const server = app.listen(port, '127.0.0.1', () => {
   }
 
   app.locals.address = address;
-  console.log(`server started at ${address}`);
+  logger.info(`server started at ${address}`);
 });

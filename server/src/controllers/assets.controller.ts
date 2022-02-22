@@ -1,12 +1,13 @@
 
 import multer from 'multer';
+import config from 'config';
 
 import { Controller } from '../utilities/types';
-import AssetService from '../services/assets.service';
-import { ASSETS } from '../utilities/constants';
+import { GetAssetList } from '../services/assets.service';
+import logger from '../utilities/logger';
 
 const storage = multer.diskStorage({
-  destination: `${ASSETS}`,
+  destination: `${config.get('assetsDir')}`,
   filename: (req, file, cb) => {
     const name = file.originalname.split('.');
     req.name = name.slice(0, -1).join('.');
@@ -25,6 +26,7 @@ const Assets: Controller = [
     middleware: [ upload.single('image') ],
     callback: async (req, res) => {
       // TODO: change to real logging (idk what that means, but you'll know ;))
+      // hey i know what this means
       res.status(200).send({name: req.name, extension: req.extension});
     }
   },
@@ -32,12 +34,12 @@ const Assets: Controller = [
     route: '',
     method: 'GET',
     callback: async (req, res) => {
-      AssetService.GetAssetList()
+      GetAssetList()
         .then(files => {
           res.status(200).send(files);
         })
         .catch(err => {
-          console.error(err);
+          logger.error(err);
           res.sendStatus(500);
         })
     }

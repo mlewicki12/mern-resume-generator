@@ -1,16 +1,16 @@
 
 import fs from 'fs';
+import config from 'config';
 
 import { FileExists } from '../utilities/functions';
 import { AssetFile } from '../utilities/types';
-import { ASSETS } from '../utilities/constants';
 
 export function GetAssetList() {
   return new Promise<AssetFile[]>((resolve, reject) => {
-    FileExists(ASSETS).then(exists => {
+    FileExists(config.get('assetsDir')).then(exists => {
       if(!exists) return reject('assets directory doesn\'t exist');
 
-      fs.readdir(ASSETS, (err, files) => {
+      fs.readdir(config.get('assetsDir'), (err, files) => {
         if(err) return reject('unable to access assets directory');
 
         const names = files.map(item => {
@@ -33,10 +33,10 @@ export function ReadAsset(name: string) {
       const file = data.find(item => item.name === name);
 
       if(file) {
-        fs.readFile(`${ASSETS}/${file.name}.${file.extension}`, (err, data) => {
+        fs.readFile(`${config.get('assetsDir')}/${file.name}.${file.extension}`, (err, content) => {
           if(err) return reject(err);
 
-          resolve(data);
+          resolve(content);
         });
       } else {
         reject(`asset ${name} not found`);
@@ -47,10 +47,10 @@ export function ReadAsset(name: string) {
 
 export function ImportAssetFile(name: string, dir: string) {
   return new Promise<void>((resolve, reject) => {
-    FileExists(`${ASSETS}/${name}`).then(exists => {
+    FileExists(`${config.get('assetsDir')}/${name}`).then(exists => {
       if(!exists) return reject(`asset ${name} doesn't exist`);
 
-      fs.copyFile(`${ASSETS}/${name}`, `${dir}/${name}`, err => {
+      fs.copyFile(`${config.get('assetsDir')}/${name}`, `${dir}/${name}`, err => {
         if(err) return reject(`error importing asset ${name}`);
 
         resolve();
