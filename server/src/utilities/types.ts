@@ -6,10 +6,9 @@ export type Controller = Endpoint[];
 export type Endpoint = {
   route: string;
   method: 'GET' | 'POST' | 'DELETE' | 'PUT';
-  callback: express.RequestHandler<any, any, any, /* QueryString.ParsedQs */ any, Record<string, any>> |
-            express.RequestHandler<any, any, any, /* QueryString.ParsedQs */ any, Record<string, any>>[];
+  callback: express.RequestHandler;
 
-  upload?: any; // used for multer, only needed for post request, doesn't have a specific type
+  middleware?: express.RequestHandler[];
 }
 
 export type KeyValues<T> = {

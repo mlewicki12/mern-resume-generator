@@ -2,7 +2,7 @@
 import multer from 'multer';
 
 import { Controller } from '../utilities/types';
-import AssetService from '../services/assets';
+import AssetService from '../services/assets.service';
 import { ASSETS } from '../utilities/constants';
 
 const storage = multer.diskStorage({
@@ -22,7 +22,7 @@ const Assets: Controller = [
   {
     route: '',
     method: 'POST',
-    upload: upload.single('image'),
+    middleware: [ upload.single('image') ],
     callback: async (req, res) => {
       // TODO: change to real logging (idk what that means, but you'll know ;))
       res.status(200).send({name: req.name, extension: req.extension});

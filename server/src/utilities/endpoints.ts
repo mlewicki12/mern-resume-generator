@@ -9,23 +9,19 @@ const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
   const route = `/${API}/${base}/${info.route}`;
   switch (info.method) {
     case 'GET':
-      app.get(route, info.callback);
+      app.get(route, ...info.middleware ?? [], info.callback);
       break;
 
     case 'POST':
-      if(info.upload) {
-        app.post(route, info.upload, info.callback);
-      } else {
-        app.post(route, info.callback);
-      }
+      app.post(route, ...info.middleware ?? [], info.callback);
       break;
 
     case 'PUT':
-      app.put(route, info.callback);
+      app.put(route, ...info.middleware ?? [], info.callback);
       break;
 
     case 'DELETE':
-      app.delete(route, info.callback);
+      app.delete(route, ...info.middleware ?? [], info.callback);
       break;
 
     default:
@@ -46,8 +42,9 @@ const buildEndpoints = (app: express.Express, route?: string) => {
       // this should technically work for dirs as long as they don't have a dot in the name
       // the idea is removing the extension if it's a file, so there's no trickery after compilation
       const fileName = item.split('.').slice(0, -1).join('.');
+      const base = item.split('.')[0];
       const module = await require(`../${endpointsRoute}/${fileName}`).default;
-      module.forEach((endpoint: Endpoint) => defineEndpoint(app, fileName, endpoint));
+      module.forEach((endpoint: Endpoint) => defineEndpoint(app, base, endpoint));
     } catch(err) {
       console.error(`error registering ${item} controller`);
       console.error(err);

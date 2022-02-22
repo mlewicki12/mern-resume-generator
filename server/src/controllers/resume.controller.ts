@@ -2,7 +2,7 @@
 import { Request } from 'express';
 
 import { Controller, ResumeRequest } from '../utilities/types';
-import ResumeService from '../services/resume';
+import ResumeService from '../services/resume.service';
 
 const Resume: Controller = [
   {

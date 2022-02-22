@@ -2,7 +2,7 @@
 import { Request } from 'express';
 
 import { Controller } from '../utilities/types';
-import ThemeService from '../services/themes';
+import ThemeService from '../services/themes.service';
 
 const Themes: Controller = [
   {
