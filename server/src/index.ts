@@ -3,8 +3,9 @@ import config from 'config';
 
 import app from './app';
 import logger from './utilities/logger';
+import connect from './utilities/connect';
 
-const server = app.listen(config.get('port'), '127.0.0.1', () => {
+const server = app.listen(config.get('port'), '127.0.0.1', async () => {
   let address = server.address();
   if(typeof address !== 'string') {
     const host = address.address;
@@ -15,4 +16,6 @@ const server = app.listen(config.get('port'), '127.0.0.1', () => {
 
   app.locals.address = address;
   logger.info(`server started at ${address}`);
+
+  await connect();
 });

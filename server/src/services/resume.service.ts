@@ -1,6 +1,7 @@
 
 import fs from 'fs';
 import config from 'config';
+import { DocumentDefinition } from 'mongoose';
 
 import liquid from '../liquid';
 
@@ -8,8 +9,11 @@ import { LoadComponent, LoadTheme } from './themes.service';
 import { Handle } from './generate.service';
 import { ImportAssetFile } from './assets.service';
 
-import { KeyValues, ResumeRequest, Theme, ThemeNode } from '../utilities/types';
+import { KeyValues, Theme, ThemeNode } from '../utilities/types';
 import { FileExists } from '../utilities/functions';
+import logger from '../utilities/logger';
+
+import ResumeModel, { ResumeDocument } from '../models/resume.model';
 
 export function GetDirectory(name: string) {
   return `public/resumes/${name}`;
@@ -21,6 +25,7 @@ export function CreateWorkDir(name: string) {
     fs.mkdir(dir, err => {
       if(err) return reject('unable to create directory for resume');
 
+      logger.info(`created working directory for ${name}`);
       resolve();
     })
   })
@@ -91,7 +96,7 @@ export function GenerateComponent(component: ThemeNode, name: string, values: Ke
   return new Promise<string>((resolve, reject) => {
     const variables = Object.keys(values).map(key => {
       // means it's in the assets folder
-      if(values[key].startsWith('@asset:')) {
+      if(typeof values[key] === 'string' && values[key].startsWith('@asset:')) {
         const file = values[key].slice(7);
         ImportAssetFile(file, `${dir}`).catch(err => reject(err));
 
@@ -110,8 +115,37 @@ export function GenerateComponent(component: ThemeNode, name: string, values: Ke
   });
 }
 
-export async function Generate(body: ResumeRequest) {
+export async function CreateResume(input: DocumentDefinition<Omit<ResumeDocument, 'createdAt' | 'updatedAt'>>) {
+  try {
+    const resume = await ResumeModel.create(input);
+    return resume.toJSON();
+  } catch(err: any) {
+    throw new Error(err);
+  }
+}
+
+export async function GetResume(id: string) {
+  try {
+    const resume = await ResumeModel.findById(id);
+    if(!resume) return undefined;
+
+    return resume.toJSON();
+  } catch(err: any) {
+    throw new Error(err);
+  }
+}
+
+export async function GenerateResume(id: string, theme: string = 'default') {
   const name = `${new Date().getTime()}`;
+
+  let resume: ResumeDocument;
+  try {
+    resume = await ResumeModel.findById(id);
+
+    if(!resume) return Promise.reject('unable to find resume');
+  } catch(err: any) {
+    return Promise.reject('unable to find resume');
+  }
 
   // callback hell let's go
   return new Promise<string>((resolve, rej) => {
@@ -122,11 +156,11 @@ export async function Generate(body: ResumeRequest) {
       : CleanWorkDir(name).then(() => rej(reason));
 
     CreateWorkDir(name).then(() => {
-      LoadTheme(body.theme ?? 'default').then(theme => {
-        if(!theme) return reject(`couldn't load theme ${body.theme}`);
-        if(!body.components) return reject('no resume components provided');
+      LoadTheme(theme ?? 'default').then(theme => {
+        if(!theme) return reject(`couldn't load theme ${theme}`);
+        if(!resume.components) return reject('no resume components provided');
 
-        const generated = body.components.map(item => {
+        const generated = resume.components.map(item => {
           return new Promise<string>(async (genRes, genRej) => {
             if(!item.component || !theme.components[item.component]) return resolve(`<h1 style='color:red'>Invalid theme component ${item.component}</h1>`);
 
@@ -156,11 +190,27 @@ export async function Generate(body: ResumeRequest) {
           UseLayout(name, output).then(() => {
             Handle(theme, name)
             .then(() => resolve(name))
-            .catch(err => reject(err));
-          }).catch(err => reject(err));
-        }).catch(err => reject(err));
-      }).catch(err => reject(`error loading theme ${body.theme}`));
-    }).catch(err => reject('unable to create working directory'));
+            .catch(err => {
+              // yeah im not happy with this either
+              logger.error(err);
+              return reject(err);
+            });
+          }).catch(err => {
+            logger.error(err);
+            return reject(err);
+          });
+        }).catch(err => {
+          logger.error(err);
+          return reject(err);
+        });
+      }).catch(err => {
+        logger.error(err);
+        return reject(`error loading theme ${theme}`)
+      });
+    }).catch(err => {
+      logger.error(err);
+      return reject('unable to create working directory');
+    });
   });
 }
 
@@ -172,5 +222,6 @@ export default {
   ImportLayout,
   UseLayout,
   GenerateComponent,
-  Generate
+  GetResume,
+  GenerateResume
 };

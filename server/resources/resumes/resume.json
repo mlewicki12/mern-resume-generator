@@ -1,0 +1,123 @@
+{
+  "components": [
+    {
+      "component": "header",
+      "variables": {
+        "name": "Maciej Lewicki",
+        "position": "Full Stack Developer",
+        "info": [
+          "Ul. Zwolenska 46J/4",
+          "04-761 Warsaw, Poland",
+          "lewickimapl@gmail.com",
+          "github.com/mlewicki12",
+          "+48 534-777-460"
+        ]
+      }
+    },
+    {
+      "component": "summary",
+      "variables": {
+        "body": "Software developer with a background in web development. Specializes in utilising various JavaScript front-end frameworks to create web applications, with experience in testing and back-end development."
+      }
+    },
+    {
+      "component": "section",
+      "variables": {
+        "title": "Professional Experience",
+        "sections": [
+          {
+            "title": "Full Stack Developer",
+            "company": "Documati",
+            "location": "Warsaw, Poland",
+            "dates": "March 2021 - Present",
+            "list": [
+              "Lead development of React web application to accompany .NET back-end",
+              "Manage Google Cloud Hosting and Firebase Authentication for over 1000 users",
+              "Work on implementing new features in .NET back-end"
+            ]
+          },
+          {
+            "title": "Developer Co-op",
+            "company": "SmartStream Technologies",
+            "location": "Philadelphia, PA",
+            "dates": "September 2019 - April 2020",
+            "list": [
+              "Developed a full stack collateral management application used by the world's biggest banks",
+              "Dealt with customer issues and solving bugs in legacy C# code",
+              "Created unit tests using Specflow and C# backing code",
+              "Improved customer facing front-end using React and RxJS"
+            ]
+          },
+          {
+            "title": "Developer Co-op",
+            "company": "SmartStream Technologies",
+            "location": "Philadelphia, PA",
+            "dates": "September 2018 - April 2019",
+            "list": [
+              "Pair programmed with experienced engineers to tackle issues in C#, F#, and Ruby",
+              "Employed extreme programming practices to futher development of collateral management system",
+              "Took part in daily Agile standups and story estimation meetings"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "component": "section",
+      "variables": {
+        "title": "Education",
+        "sections": [
+          {
+            "title": "Bachelor of Science in Computer Science",
+            "company": "Drexel University",
+            "location": "Philadelphia, PA",
+            "dates": "September 2017 - September 2020",
+            "list": [
+              "Completed three out of five years",
+              "Withdrew with a 3.53 GPA due to financial issues"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "component": "section",
+      "variables": {
+        "title": "Key Skills",
+        "sections": [
+          {
+            "title": "Programming Skills",
+            "list": [
+              "HTML, CSS, Javascript",
+              "React, NextJS, RxJS, and Node.js frameworks",
+              "Google Cloud, Jira, Microsoft Azure"
+            ]
+          },
+          {
+            "title": "Languages",
+            "list": [
+              "Polish - Native",
+              "English - Fluent",
+              "Russian - Conversational"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "component": "section",
+      "variables": {
+        "title": "Activities",
+        "sections": [
+          {
+            "title": "Music",
+            "list": [
+              "Proficiency on bass guitar, guitar, and vocals. Experience planning, routing, and booking tours. Participation in over 100 live performances",
+              "Management and PR for Knifepunch Records"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

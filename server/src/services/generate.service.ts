@@ -1,6 +1,7 @@
 
 import fs from 'fs';
 import yaml from 'js-yaml';
+import config from 'config';
 
 import { GetThemeDir, GetThemeName, ImportThemeFile } from './themes.service';
 import { Theme, GenerateOperation } from '../utilities/types';
@@ -65,7 +66,7 @@ export function Handle(theme: Theme, name: string) {
           switch(step.op) {
             case 'import':
               if(!step.file) return Promise.reject(`no file provided for import operation`);
-              return ImportThemeFile(theme, step.file, name);
+              return ImportThemeFile(theme, step.file, `${config.get('resumeDir')}/${name}`);
 
             case 'compile':
               // need more info here depending on which check failed

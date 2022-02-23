@@ -20,10 +20,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.raw());
 
-// there probably is a way to do this the other way around
-// but that's for a later date :)
-// maybe not, app.use is mainly for middleware whereas this defines endpoints
-// so it might be better to keep it as is
 endpoints(app);
 
 FileExists('public/resumes').then(exists => {

@@ -5,6 +5,7 @@ import config from 'config';
 
 import { Theme } from '../utilities/types';
 import { FileExists } from '../utilities/functions';
+import logger from '../utilities/logger';
 
 export function GetThemeName(theme: string | Theme) {
   return typeof theme === 'string' ? theme : theme.name;
@@ -48,7 +49,8 @@ export function LoadTheme(name: string) {
           theme.path = path;
 
           resolve(theme);
-        } catch {
+        } catch (err) {
+          logger.error(err);
           reject(`unable to parse theme.yaml for theme ${name}`);
         }
       });
@@ -68,7 +70,10 @@ export function ImportThemeFile(theme: string | Theme, file: string, dest: strin
       // but it shouldn't matter rn bc the only use
       // creates the dir for it and ensures it exists already
       fs.copyFile(`${path}/${file}`, `${dest}/${file}`, (err) => {
-        if(err) return reject(`unable to import ${file} to ${dest}/${file}`);
+        if(err) {
+          logger.error(err);
+          return reject(`unable to import ${file} to ${dest}/${file}`);
+        }
 
         resolve();
       });

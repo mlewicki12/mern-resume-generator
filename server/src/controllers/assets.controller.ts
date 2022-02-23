@@ -9,11 +9,8 @@ import logger from '../utilities/logger';
 const storage = multer.diskStorage({
   destination: `${config.get('assetsDir')}`,
   filename: (req, file, cb) => {
-    const name = file.originalname.split('.');
-    req.name = name.slice(0, -1).join('.');
-    req.extension = name.pop();
-
-    cb(null, `${req.name}.${req.extension}`);
+    // todo: should check if there's no conflicts
+    cb(null, file.originalname);
   }
 });
 
@@ -25,9 +22,9 @@ const Assets: Controller = [
     method: 'POST',
     middleware: [ upload.single('image') ],
     callback: async (req, res) => {
-      // TODO: change to real logging (idk what that means, but you'll know ;))
+      // todo: change to real logging (idk what that means, but you'll know ;))
       // hey i know what this means
-      res.status(200).send({name: req.name, extension: req.extension});
+      res.status(200).send(req.file.filename);
     }
   },
   {

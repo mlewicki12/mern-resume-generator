@@ -4,7 +4,7 @@ import express from 'express';
 export type Controller = Endpoint[];
 
 export type Endpoint = {
-  route: string;
+  route: string | string[];
   method: 'GET' | 'POST' | 'DELETE' | 'PUT';
   callback: express.RequestHandler;
 
@@ -13,7 +13,7 @@ export type Endpoint = {
 
 export type KeyValues<T> = {
   [key: string]: T
-}
+};
 
 export type Theme = {
   name: string;
@@ -54,7 +54,7 @@ export type ResumeRequest = {
 
 export type Component = {
   component: string;
-  variables: KeyValues<string>
+  variables: Map<string, string>
 };
 
 export type LiquidFile = {

@@ -7,30 +7,34 @@ import { Endpoint } from './types';
 import logger from './logger';
 
 const defineEndpoint = (app: express.Express, base: string, info: Endpoint) => {
-  const route = `/${config.get('apiPath')}/${base}/${info.route}`;
-  switch (info.method) {
-    case 'GET':
-      app.get(route, ...info.middleware ?? [], info.callback);
-      break;
+  const routes = typeof info.route === 'string' ? [ info.route ] : info.route;
 
-    case 'POST':
-      app.post(route, ...info.middleware ?? [], info.callback);
-      break;
+  routes.forEach(path => {
+    const route = `/${config.get('apiPath')}/${base}/${path}`;
+    switch (info.method) {
+      case 'GET':
+        app.get(route, ...info.middleware ?? [], info.callback);
+        break;
 
-    case 'PUT':
-      app.put(route, ...info.middleware ?? [], info.callback);
-      break;
+      case 'POST':
+        app.post(route, ...info.middleware ?? [], info.callback);
+        break;
 
-    case 'DELETE':
-      app.delete(route, ...info.middleware ?? [], info.callback);
-      break;
+      case 'PUT':
+        app.put(route, ...info.middleware ?? [], info.callback);
+        break;
 
-    default:
-      logger.error(`unknown operation ${info.method}`);
-      return;
-  }
+      case 'DELETE':
+        app.delete(route, ...info.middleware ?? [], info.callback);
+        break;
 
-  logger.info(`defined ${info.method} handler for ${route}`);
+      default:
+        logger.error(`unknown operation ${info.method}`);
+        return;
+    }
+
+    logger.info(`defined ${info.method} handler for ${route}`);
+  });
 }
 
 const buildEndpoints = (app: express.Express, route?: string) => {
