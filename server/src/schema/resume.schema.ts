@@ -2,6 +2,9 @@
 import { array, object, string, map, TypeOf } from 'zod';
 
 const ComponentSchema = object({
+  name: string({
+    required_error: 'resume name is required'
+  }),
   component: string({
     required_error: 'component name is required'
   }),

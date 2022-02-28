@@ -9,6 +9,7 @@ export interface ResumeComponent {
 }
 
 export interface ResumeDocument extends mongoose.Document {
+  name: string;
   // not necessarily what i'd like it to be, but it should never be undefined
   components?: ResumeComponent[];
 
@@ -18,7 +19,8 @@ export interface ResumeDocument extends mongoose.Document {
 
 const resumeSchema = new mongoose.Schema({
   theme: { type: String, default: () => 'default' },
-  components: { type: [ mongoose.Schema.Types.Mixed ], default: () => {} }
+  components: { type: [ mongoose.Schema.Types.Mixed ], default: () => {return {}} },
+  name: { type: String, default: () => 'unnamed' }
 }, {
   timestamps: true
 });

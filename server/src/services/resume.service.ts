@@ -135,6 +135,17 @@ export async function GetResume(id: string) {
   }
 }
 
+export async function GetAllResumes() {
+  try {
+    const resumes = await ResumeModel.find({});
+    if(!resumes) return [];
+
+    return resumes;
+  } catch(err: any) {
+    throw new Error(err);
+  }
+}
+
 export async function GenerateResume(id: string, theme: string = 'default') {
   const name = `${new Date().getTime()}`;
 
@@ -223,5 +234,6 @@ export default {
   UseLayout,
   GenerateComponent,
   GetResume,
+  GetAllResumes,
   GenerateResume
 };

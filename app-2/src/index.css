@@ -21,3 +21,15 @@
       disabled:hover:shadow-none;
   }
 }
+
+@layer components {
+  .container {
+    @apply p-2 bg-white border border-black rounded
+      first:border-b-0 first:rounded-b-none
+      last:border-t-0 last:rounded-t-none;
+  }
+
+  .container:not(:first-child) {
+    @apply rounded-none last:rounded-b;
+  }
+}

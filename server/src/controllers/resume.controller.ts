@@ -3,7 +3,7 @@ import { Request } from 'express';
 
 import { Controller } from '../utilities/types';
 import logger from '../utilities/logger';
-import { CreateResume, GenerateResume, GetResume } from '../services/resume.service';
+import { CreateResume, GenerateResume, GetResume, GetAllResumes } from '../services/resume.service';
 import { GenerateResumeInput, GetResumeInput, ResumeRequestInput } from '../schema/resume.schema';
 
 const Resume: Controller = [
@@ -13,6 +13,18 @@ const Resume: Controller = [
     callback: async (req: Request<{}, {}, ResumeRequestInput['body']>, res) => {
       CreateResume(req.body)
         .then(result => res.status(200).send(result._id))
+        .catch(err => {
+          logger.error(err);
+          res.sendStatus(500);
+        })
+    }
+  },
+  {
+    route: '',
+    method: 'GET',
+    callback: async (req, res) => {
+      GetAllResumes()
+        .then(results => res.status(200).send(results))
         .catch(err => {
           logger.error(err);
           res.sendStatus(500);
