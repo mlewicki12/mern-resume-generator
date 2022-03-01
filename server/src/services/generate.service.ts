@@ -58,7 +58,7 @@ export function HandleCompile(theme: string | Theme, name: string, op: GenerateO
   });
 }
 
-export function Handle(theme: Theme, name: string) {
+export function HandleGenerate(theme: Theme, name: string) {
   return new Promise<void>((resolve, reject) => {
     ParseGenerateFile(theme)
       .then(data => {
@@ -88,5 +88,5 @@ export function Handle(theme: Theme, name: string) {
 export default {
   ParseGenerateFile,
   HandleCompile,
-  Handle
+  HandleGenerate
 };

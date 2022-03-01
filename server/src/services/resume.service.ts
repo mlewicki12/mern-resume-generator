@@ -2,11 +2,12 @@
 import fs from 'fs';
 import config from 'config';
 import { DocumentDefinition, UpdateQuery, QueryOptions } from 'mongoose';
+import pdf from 'html-pdf';
 
 import liquid from '../liquid';
 
 import { LoadComponent, LoadTheme } from './themes.service';
-import { Handle } from './generate.service';
+import { HandleGenerate } from './generate.service';
 import { ImportAssetFile } from './assets.service';
 
 import { KeyValues, Theme, ThemeNode } from '../utilities/types';
@@ -181,7 +182,7 @@ export async function GenerateResume(id: string, theme: string = 'default') {
 
         const generated = resume.components.map(item => {
           return new Promise<string>(async (genRes, genRej) => {
-            if(!item.component || !theme.components[item.component]) return resolve(`<h1 style='color:red'>Invalid theme component ${item.component}</h1>`);
+            if(!item.component || !theme.components[item.component]) return genRes(`<h1 style='color:red'>Invalid theme component ${item.component}</h1>`);
 
             if(!theme.components[item.component].liquid) {
               // await here so i don't have to retype load
@@ -207,7 +208,7 @@ export async function GenerateResume(id: string, theme: string = 'default') {
           }
 
           UseLayout(name, output).then(() => {
-            Handle(theme, name)
+            HandleGenerate(theme, name)
             .then(() => resolve(name))
             .catch(err => {
               // yeah im not happy with this either

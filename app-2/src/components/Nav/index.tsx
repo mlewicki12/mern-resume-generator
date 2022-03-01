@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Nav = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className='w-full h-32 border-b border-black p-2 flex flex-row justify-center items-center'>
       <div className='w-1/2 flex flex-row justify-between items-center'>
@@ -10,13 +12,8 @@ const Nav = () => {
           <h1 className='text-4xl font-sans'>Resume Builder</h1>
         </Link>
         <div>
-          <Link to='/resumes'>
-            <button>List</button>
-          </Link>
-
-          <Link to='/create'>
-            <button>Create New</button>
-          </Link>
+          <button onClick={() => navigate('/resumes')}>List</button>
+          <button onClick={() => navigate('/create')}>Create New</button>
         </div>
       </div>
     </nav>
