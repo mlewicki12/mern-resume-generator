@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import config from 'config';
-import { DocumentDefinition } from 'mongoose';
+import { DocumentDefinition, UpdateQuery, QueryOptions } from 'mongoose';
 
 import liquid from '../liquid';
 
@@ -135,6 +135,14 @@ export async function GetResume(id: string) {
   }
 }
 
+export async function UpdateResume(id: string, update: UpdateQuery<ResumeDocument>, options: QueryOptions) {
+  return ResumeModel.updateOne({ _id: id }, update, options);
+}
+
+export async function DeleteResume(id: string) {
+  return ResumeModel.deleteOne({ _id: id });
+}
+
 export async function GetAllResumes() {
   try {
     const resumes = await ResumeModel.find({});
@@ -234,6 +242,8 @@ export default {
   UseLayout,
   GenerateComponent,
   GetResume,
+  UpdateResume,
+  DeleteResume,
   GetAllResumes,
   GenerateResume
 };

@@ -3,8 +3,8 @@ import { Request } from 'express';
 
 import { Controller } from '../utilities/types';
 import logger from '../utilities/logger';
-import { CreateResume, GenerateResume, GetResume, GetAllResumes } from '../services/resume.service';
-import { GenerateResumeInput, GetResumeInput, ResumeRequestInput } from '../schema/resume.schema';
+import { CreateResume, GenerateResume, GetResume, GetAllResumes, UpdateResume, DeleteResume } from '../services/resume.service';
+import { DeleteResumeInput, GenerateResumeInput, GetResumeInput, ResumeRequestInput, UpdateResumeInput } from '../schema/resume.schema';
 
 const Resume: Controller = [
   {
@@ -47,6 +47,7 @@ const Resume: Controller = [
     }
   },
   {
+    // not sure if this should be a post request tbh
     route: [':id', ':id/:theme'],
     method: 'POST',
     callback: async (req: Request<GenerateResumeInput['params']>, res) => {
@@ -56,6 +57,30 @@ const Resume: Controller = [
           logger.error(err);
           res.sendStatus(500);
         });
+    }
+  },
+  {
+    route: ':id',
+    method: 'PUT',
+    callback: async (req: Request<UpdateResumeInput['params'], {}, UpdateResumeInput['body']>, res) => {
+      UpdateResume(req.params.id, req.body, {})
+        .then(result => res.status(200).send(result))
+        .catch(err => {
+          logger.error(err);
+          res.sendStatus(500);
+        })
+    }
+  },
+  {
+    route: ':id',
+    method: 'DELETE',
+    callback: async (req: Request<DeleteResumeInput['params']>, res) => {
+      DeleteResume(req.params.id)
+        .then(result => res.sendStatus(200))
+        .catch(err => {
+          logger.error(err);
+          res.sendStatus(500);
+        })
     }
   }
 ]
