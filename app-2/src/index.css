@@ -35,9 +35,12 @@
   }
 
   .list {
-    @apply first:border-b-0 first:rounded-b-none
-      last:border-t-0 last:rounded-t-none
-      first:mb-0 last:mt-0;
+    @apply first:rounded-b-none first:mb-0
+      last:rounded-t-none last:mt-0;
+  }
+
+  .list:not(:last-child) {
+    @apply border-b-0;
   }
 
   .list:not(:first-child):not(:last-child) {

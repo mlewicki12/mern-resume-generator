@@ -21,6 +21,14 @@ export function GenerateResume(id: string, theme: string = 'default') {
   });
 }
 
+export function DeleteResume(id: string) {
+  return new Promise<void>((resolve, reject) => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/resume/${id}`)
+      .then(res => resolve(res.data))
+      .catch(getCatch(reject));
+  });
+}
+
 export default {
   GetAllResumes,
   GenerateResume
