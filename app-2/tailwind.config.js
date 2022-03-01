@@ -22,6 +22,9 @@ module.exports = {
     extend: {
       boxShadow: {
         'full': '0.25rem 0.25rem black'
+      },
+      minWidth: {
+        '100': '100px'
       }
     },
   },

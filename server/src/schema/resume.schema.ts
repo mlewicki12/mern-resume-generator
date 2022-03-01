@@ -2,9 +2,6 @@
 import { array, object, string, map, TypeOf } from 'zod';
 
 const ComponentSchema = object({
-  name: string({
-    required_error: 'resume name is required'
-  }),
   component: string({
     required_error: 'component name is required'
   }),
@@ -13,6 +10,7 @@ const ComponentSchema = object({
 
 export const ResumeRequestSchema = object({
   body: object({
+    name: string({ required_error: 'resume name is required' }),
     components: array(ComponentSchema).min(1, 'need to provide at least 1 component for resume')
   })
 });

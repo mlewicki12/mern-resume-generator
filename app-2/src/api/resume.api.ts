@@ -13,6 +13,15 @@ export function GetAllResumes() {
   });
 };
 
+export function GenerateResume(id: string, theme: string = 'default') {
+  return new Promise<string>((resolve, reject) => {
+    axios.post(`${process.env.REACT_APP_API_URL}/api/resume/${id}/${theme}`)
+      .then(res => resolve(res.data))
+      .catch(getCatch(reject));
+  });
+}
+
 export default {
-  GetAllResumes
+  GetAllResumes,
+  GenerateResume
 };

@@ -6,7 +6,11 @@
       <div class="content-section">
         <div class="content-title">
           <span class="job-title">{{ section.title }}</span>
-          <p class="company">{{ section.company }}, {{ section.location }} / {{ section.dates }}</p>
+          <p class="company">{{ section.company }}
+            {% if section.company %},{% endif %}
+            {{ section.location }}
+            {% if section.location and section.dates %} / {% endif %}
+            {{ section.dates }}</p>
         </div>
         <ul class="content-list">
           {% for text in section.list %}
