@@ -1,16 +1,23 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import './index.css';
-
-import '@atlaskit/css-reset';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { CreatePage, ResumesPage } from './routes';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<App />}>
+          <Route path='/resumes' element={<ResumesPage />} />
+          <Route path='/create' element={<CreatePage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
