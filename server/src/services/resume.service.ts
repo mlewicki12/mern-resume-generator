@@ -1,8 +1,8 @@
 
 import fs from 'fs';
 import config from 'config';
+import puppeteer from 'puppeteer';
 import { DocumentDefinition, UpdateQuery, QueryOptions } from 'mongoose';
-import pdf from 'html-pdf';
 
 import liquid from '../liquid';
 
@@ -168,7 +168,7 @@ export async function GenerateResume(id: string, theme: string = 'default') {
   }
 
   // callback hell let's go
-  return new Promise<string>((resolve, rej) => {
+  return new Promise<Buffer>((resolve, rej) => {
     // clean out all working files on error
     const reject = (reason: NodeJS.ErrnoException | string) =>
       config.get('debug')
@@ -209,9 +209,16 @@ export async function GenerateResume(id: string, theme: string = 'default') {
 
           UseLayout(name, output).then(() => {
             HandleGenerate(theme, name)
-            .then(() => resolve(name))
+            .then(() => {
+              ConvertToPDF(name)
+                .then(data => resolve(data))
+                .catch(err => {
+                  // yeah im not happy with this either
+                  logger.error(err);
+                  return reject(err);
+                })
+            })
             .catch(err => {
-              // yeah im not happy with this either
               logger.error(err);
               return reject(err);
             });
@@ -232,6 +239,19 @@ export async function GenerateResume(id: string, theme: string = 'default') {
       return reject('unable to create working directory');
     });
   });
+}
+
+export async function ConvertToPDF(name: string) {
+  const browser = await puppeteer.launch({ headless: true });
+  const page = await browser.newPage();
+  const path = GetDirectory(name);
+
+  await page.goto(`file://${process.cwd()}\\${path}\\index.html`, { waitUntil: 'networkidle0' });
+  // margins could be controller by template
+  const pdf = await page.pdf({ format: 'a4', printBackground: true, margin: { top: '0.1in', right: '0.1in', bottom: '0.1in', left: '0.1in' } });
+
+  await browser.close();
+  return pdf;
 }
 
 export default {

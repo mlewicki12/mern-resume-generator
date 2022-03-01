@@ -14,9 +14,13 @@ export function GetAllResumes() {
 };
 
 export function GenerateResume(id: string, theme: string = 'default') {
-  return new Promise<string>((resolve, reject) => {
-    axios.post(`${process.env.REACT_APP_API_URL}/api/resume/${id}/${theme}`)
-      .then(res => resolve(res.data))
+  return new Promise<Buffer>((resolve, reject) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/resume/${id}/${theme}`, {
+      responseType: 'arraybuffer',
+      headers: {
+        'Accept': 'application/pdf'
+      }
+    }).then(res => resolve(res.data))
       .catch(getCatch(reject));
   });
 }

@@ -1,4 +1,5 @@
 
+import fs from 'fs';
 import { Request } from 'express';
 
 import { Controller } from '../utilities/types';
@@ -48,11 +49,14 @@ const Resume: Controller = [
   },
   {
     // not sure if this should be a post request tbh
-    route: [':id', ':id/:theme'],
-    method: 'POST',
+    route: ':id/:theme',
+    method: 'GET',
     callback: async (req: Request<GenerateResumeInput['params']>, res) => {
       GenerateResume(req.params.id, req.params.theme)
-        .then(result => res.status(200).send(result))
+        .then(result => {
+          res.set({ 'Content-Type': 'application/pdf', 'Content-Length': result.length });
+          res.send(result);
+        })
         .catch(err => {
           logger.error(err);
           res.sendStatus(500);

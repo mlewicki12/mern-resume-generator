@@ -10,7 +10,13 @@ const Resumes = () => {
 
   const handleGenerate = (id: string) => {
     GenerateResume(id, 'pink')
-      .then(name => window.open(`${process.env.REACT_APP_API_URL}/resumes/${name}`))
+      .then(response => {
+        const blob = new Blob([response], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'resume.pdf';
+        link.click();
+      })
       .catch(console.error);
   }
 

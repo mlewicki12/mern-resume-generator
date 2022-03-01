@@ -6,8 +6,7 @@
       <div class="content-section">
         <div class="content-title">
           <span class="job-title">{{ section.title }}</span>
-          <p class="company">{{ section.company }}
-            {% if section.company %},{% endif %}
+          <p class="company">{{ section.company }}{% if section.company %},{% endif %}
             {{ section.location }}
             {% if section.location and section.dates %} / {% endif %}
             {{ section.dates }}</p>
