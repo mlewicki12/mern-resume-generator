@@ -9,7 +9,7 @@ const App = () => {
     <>
       <Nav />
 
-      <main className='w-full flex flex-col items-center p-12'>
+      <main className='flex flex-col items-center h-full p-12'>
         <Outlet />
       </main>
     </>

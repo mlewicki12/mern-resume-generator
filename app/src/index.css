@@ -8,6 +8,13 @@
 @layer base {
   body {
     @apply bg-cream;
+
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #root {
+    @apply h-full box-border flex flex-col;
   }
 
   button {
@@ -27,11 +34,35 @@
   button.active {
     @apply bg-white;
   }
+
+  select {
+    @apply m-2 p-2 border border-black rounded
+      min-w-100 bg-white cursor-pointer
+      transition-all duration-150
+
+      hover:bg-cream;
+  }
 }
 
 @layer components {
+  .wrapper {
+    @apply w-1/2;
+  }
+
   .container {
     @apply m-2 p-2 bg-white border border-black rounded;
+  }
+
+  .row {
+    @apply flex w-full justify-between items-center;
+  }
+
+  .form-controls {
+    @apply row mt-auto p-2 border-t border-black;
+  }
+  
+  .title {
+    @apply font-bold text-xl;
   }
 
   .list {

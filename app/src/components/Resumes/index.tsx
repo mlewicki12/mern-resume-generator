@@ -35,12 +35,11 @@ const Resumes = () => {
   }, []);
 
   return (
-    <ul className='m-1/2 w-1/2 h-full flex flex-col items-center'>
+    <ul className='wrapper flex flex-col items-center'>
       {resumes.map(res => (
         <li key={res._id} className='list container flex justify-between items-center'>
           <div className='flex flex-col justify-between'>
-            <h2 className='font-bold text-xl'>{res.name}</h2>
-            <p className='text-sm'>{res._id}</p>
+            <h2 className='title'>{res.name}</h2>
             <p className='text-sm'>created {moment(res.createdAt).format('YYYY-MM-DD HH:mm')}</p>
           </div>
           <div>
