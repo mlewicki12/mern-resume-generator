@@ -1,9 +1,22 @@
 
 import axios from 'axios';
 import { getCatch } from '../utils/promise';
+import { KeyValues, MongooseDocument } from '../utils/types';
+
+export type ResumeComponent = {
+  component: string;
+  variables: KeyValues<string>;
+}
+
+export type Resume = {
+  name: string;
+  components: ResumeComponent[];
+};
+
+export type ResumeDocument = Resume & MongooseDocument;
 
 export function GetAllResumes() {
-  return new Promise<any[]>((resolve, reject) => {
+  return new Promise<ResumeDocument[]>((resolve, reject) => {
     axios.get(`${process.env.REACT_APP_API_URL}/api/resume`)
       .then(res => {
         console.log(res);

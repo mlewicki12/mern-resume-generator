@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { Controller } from '../utilities/types';
 import { LoadTheme, ReadThemes } from '../services/themes.service';
 import logger from '../utilities/logger';
+import { omit } from 'lodash';
 
 const Themes: Controller = [
   {
@@ -23,7 +24,7 @@ const Themes: Controller = [
     method: 'GET',
     callback: async (req: Request<{name: string}>, res) => {
       LoadTheme(req.params.name)
-        .then(data => res.status(200).send(data))
+        .then(data => res.status(200).send(omit(data, ['path', 'layout'])))
         .catch(err => {
           logger.error(err);
           res.status(500);

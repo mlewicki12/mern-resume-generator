@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 
-import { DeleteResume, GenerateResume, GetAllResumes } from '../../api/resume.api';
+import { DeleteResume, GenerateResume, GetAllResumes, ResumeDocument } from '../../api/resume.api';
 import { getCatch } from '../../utils/promise';
 
 const Resumes = () => {
-  const [resumes, setResumes] = useState<any[]>([]);
+  const [resumes, setResumes] = useState<ResumeDocument[]>([]);
 
   const handleGenerate = (id: string) => {
     GenerateResume(id, 'pink')

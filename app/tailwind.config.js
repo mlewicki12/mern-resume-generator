@@ -24,6 +24,8 @@ module.exports = {
         'full': '0.25rem 0.25rem black'
       },
       minWidth: {
+        '50': '50px',
+        '75': '75px',
         '100': '100px'
       }
     },
