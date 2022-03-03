@@ -24,7 +24,7 @@
       hover:-translate-x-1 hover:-translate-y-1
       hover:shadow-full
       
-      active:bg-white
+      hover:bg-white active:bg-white
 
       disabled:text-gray-500 disabled:border-gray-500
       disabled:hover:translate-x-0 disabled:hover:translate-y-0
@@ -37,6 +37,18 @@
 
   button.active {
     @apply bg-white;
+  }
+
+  button.red {
+    @apply hover:bg-red-400;
+  }
+
+  button.green {
+    @apply hover:bg-green-400;
+  }
+
+  button.blue {
+    @apply hover:bg-blue-400;
   }
 
   select {

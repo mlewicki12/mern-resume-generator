@@ -49,9 +49,9 @@ const Resumes = () => {
             <p className='text-sm'>created {moment(res.createdAt).format('YYYY-MM-DD HH:mm')}</p>
           </div>
           <div>
-            <button onClick={() => handleGenerate(res._id)}>Generate</button>
-            <button onClick={() => handleEdit(res._id)}>Edit</button>
-            <button onClick={() => handleDelete(res._id)}>Delete</button>
+            <button onClick={() => handleGenerate(res._id)} className='green'>Generate</button>
+            <button onClick={() => handleEdit(res._id)} className='blue'>Edit</button>
+            <button onClick={() => handleDelete(res._id)} className='red'>Delete</button>
           </div>
         </li>
       ))}

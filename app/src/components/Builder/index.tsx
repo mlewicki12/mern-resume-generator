@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useMatch, useNavigate, useParams } from 'react-router-dom';
 import { GetResume, Resume } from '../../api/resume.api';
 import ComponentList from './ComponentList';
 import ThemeSelect from './ThemeSelect';
@@ -15,12 +15,21 @@ const Builder = () => {
   const [step, setStep] = useState<number>(0);
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const updateName = (value: string) => {
     const newRes = {...resume};
     newRes.name = value;
 
     setResume(newRes);
+  }
+
+  const handleBack = () => {
+    if(step === 0) {
+      navigate(-1);
+    } else {
+      setStep(step => step - 1);
+    }
   }
 
   useEffect(() => {
@@ -49,8 +58,8 @@ const Builder = () => {
       </div>
         
       <div className='form-controls'>
-        <button disabled={step === 0} onClick={() => setStep(step => step - 1)}>Back</button>
-        <button disabled={step === steps.length - 1} onClick={() => setStep(step => step + 1)}>Continue</button>
+        <button onClick={handleBack} className='red'>{step === 0 ? 'Cancel' : 'Back'}</button>
+        <button onClick={() => setStep(step => step + 1)} className='green' disabled={step === steps.length - 1} >Continue</button>
       </div>
     </div>
   );
