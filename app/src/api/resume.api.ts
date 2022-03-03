@@ -10,6 +10,7 @@ export type ResumeComponent = {
 
 export type Resume = {
   name: string;
+  theme: string;
   components: ResumeComponent[];
 };
 
@@ -34,6 +35,14 @@ export function GenerateResume(id: string, theme: string = 'default') {
         'Accept': 'application/pdf'
       }
     }).then(res => resolve(res.data))
+      .catch(getCatch(reject));
+  });
+}
+
+export function GetResume(id: string) {
+  return new Promise<Resume>((resolve, reject) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/resume/${id}`)
+      .then(res => resolve(res.data))
       .catch(getCatch(reject));
   });
 }

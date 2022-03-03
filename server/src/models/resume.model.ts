@@ -13,6 +13,7 @@ export interface ResumeDocument extends mongoose.Document {
 
   // not necessarily what i'd like it to be, but it should never be undefined
   components?: ResumeComponent[];
+  theme?: string;
 
   createdAt: Date;
   updatedAt: Date;

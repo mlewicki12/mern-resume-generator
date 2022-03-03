@@ -4,9 +4,11 @@ import moment from 'moment';
 
 import { DeleteResume, GenerateResume, GetAllResumes, ResumeDocument } from '../../api/resume.api';
 import { getCatch } from '../../utils/promise';
+import { useNavigate } from 'react-router-dom';
 
 const Resumes = () => {
   const [resumes, setResumes] = useState<ResumeDocument[]>([]);
+  const navigate = useNavigate();
 
   const handleGenerate = (id: string) => {
     GenerateResume(id, 'pink')
@@ -18,6 +20,10 @@ const Resumes = () => {
         link.click();
       })
       .catch(console.error);
+  }
+
+  const handleEdit = (id: string) => {
+    navigate(`/edit/${id}`);
   }
 
   const handleDelete = (id: string) => {
@@ -44,6 +50,7 @@ const Resumes = () => {
           </div>
           <div>
             <button onClick={() => handleGenerate(res._id)}>Generate</button>
+            <button onClick={() => handleEdit(res._id)}>Edit</button>
             <button onClick={() => handleDelete(res._id)}>Delete</button>
           </div>
         </li>

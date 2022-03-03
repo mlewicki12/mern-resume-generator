@@ -146,7 +146,7 @@ export async function DeleteResume(id: string) {
 
 export async function GetAllResumes() {
   try {
-    const resumes = await ResumeModel.find({});
+    const resumes = await ResumeModel.find({}).select('-components -theme');
     if(!resumes) return [];
 
     return resumes;

@@ -50,10 +50,6 @@
   input {
     @apply m-2 p-2 pb-1 border-b border-black;
   }
-  
-  input:focus {
-    @apply border-none;
-  }
 }
 
 @layer components {
@@ -66,7 +62,8 @@
   }
 
   .row {
-    @apply flex w-full justify-between items-center;
+    @apply py-2 flex w-full justify-between items-center
+      first:pt-0 last:pb-0;
   }
 
   .form-controls {

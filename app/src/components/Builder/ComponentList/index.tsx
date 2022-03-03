@@ -1,21 +1,22 @@
 
 import React, { useState, useEffect } from 'react';
-import { ResumeComponent } from '../../../api/resume.api';
+import { Resume, ResumeComponent } from '../../../api/resume.api';
 import { LoadTheme, Theme } from '../../../api/themes.api';
 import { KeyValues } from '../../../utils/types';
 import Title from '../../Title';
 import EditComponent from './EditComponent';
 
 type ComponentListProps = {
+  resume: Resume;
   theme: string;
 }
 
 const ComponentList = ({
-  theme
+  resume, theme
 }: ComponentListProps) => {
   const [loaded, setLoaded] = useState<Theme | undefined>();
   const [selected, setSelected] = useState<string>('');
-  const [components, setComponents] = useState<ResumeComponent[]>([]);
+  const [components, setComponents] = useState<ResumeComponent[]>(resume.components);
 
   const [editing, setEditing] = useState<number | undefined>(undefined);
 

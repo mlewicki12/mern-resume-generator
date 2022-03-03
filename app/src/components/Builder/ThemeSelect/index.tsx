@@ -1,14 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
+import resumeApi, { Resume } from '../../../api/resume.api';
 import { GetThemes } from '../../../api/themes.api';
 import Title from '../../Title';
 
 type ThemeSelectProps = {
-  onSelect: (value: string) => void;
+  resume: Resume;
+  onChangeName: (value: string) => void;
+  onSelectTheme: (value: string) => void;
 }
 
 const ThemeSelect = ({
-  onSelect
+  resume, onChangeName, onSelectTheme
 }: ThemeSelectProps) => {
   const [themes, setThemes] = useState<string[]>([]);
 
@@ -16,7 +19,7 @@ const ThemeSelect = ({
     GetThemes()
       .then(data => {
         if(data.length >= 1) {
-          onSelect(data[0]);
+          onSelectTheme(data[0]);
         }
 
         setThemes(data)
@@ -26,15 +29,23 @@ const ThemeSelect = ({
 
   return (
     <>
-      <div className='row'>
-        <Title title='Select a theme' />
-        <select onChange={e => onSelect(e.target.value)}>
+      <div className='row' key='name'>
+        <Title title='Name the resume' subtitle='This will help you identify it in the future' />
+        <input type='text' placeholder='resume' value={resume.name} onChange={(e) => onChangeName(e.target.value)}></input>
+      </div>
+
+      <div className='row' key='theme'>
+        <Title title='Select a theme' subtitle='This controls what the resume looks like' />
+        <select onChange={e => onSelectTheme(e.target.value)}>
           {themes.map(theme => (
             <option value={theme} key={theme}>{theme}</option>
           ))}
         </select>
       </div>
-      <p>there will be a theme preview here at some point</p>
+
+      <div className='row' key='preview'>
+        <p>there will be a theme preview here at some point</p>
+      </div>
     </>
   );
 };
