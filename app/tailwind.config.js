@@ -13,7 +13,7 @@ module.exports = {
       black: colors.black,
       gray: colors.gray,
       red: colors.rose,
-      blue: colors.cyan,
+      blue: colors.sky,
       green: colors.emerald
     },
     fontFamily: {

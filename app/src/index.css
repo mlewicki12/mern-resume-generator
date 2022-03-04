@@ -40,15 +40,15 @@
   }
 
   button.red {
-    @apply hover:bg-red-400;
+    @apply hover:bg-red-300 disabled:hover:bg-transparent;
   }
 
   button.green {
-    @apply hover:bg-green-400;
+    @apply hover:bg-green-300 disabled:hover:bg-transparent;
   }
 
   button.blue {
-    @apply hover:bg-blue-400;
+    @apply hover:bg-blue-300 disabled:hover:bg-transparent;
   }
 
   select {
@@ -60,7 +60,8 @@
   }
 
   input {
-    @apply m-2 p-2 pb-1 border-b border-black;
+    @apply m-2 p-2 pb-1 border-b border-black
+      hover:bg-cream;
   }
 }
 

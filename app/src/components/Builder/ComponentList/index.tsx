@@ -69,7 +69,7 @@ const ComponentList = ({
 
   return (
     <>
-      <div className='row border-b pb-2 mb-2 border-black'>
+      <div className='row border-b pb-2 mb-2 border-black' key='header'>
         <Title title='Build your resume' subtitle='Pick a component from the list' />
         {loaded &&
           <div>
@@ -78,11 +78,11 @@ const ComponentList = ({
                 <option value={key} key={key}>{loaded.components[key].name}</option>
               ))}
             </select>
-            <button onClick={handleAdd}>Add</button>
+            <button onClick={handleAdd} className='green'>Add</button>
           </div>
         }
       </div>
-      <div className='p-2'>
+      <div className='p-2' key='component-list'>
         {components.map((comp, index) => (
           <EditComponent 
             open={index === editing}
@@ -90,8 +90,8 @@ const ComponentList = ({
             onUpdate={(value) => updateComponent(index, value)}
             onClose={() => setEditing(undefined)}
           >
-            <button className='sm' onClick={() => setEditing(index)} disabled={index === editing}>Edit</button>
-            <button className='sm' onClick={() => handleDelete(index)}>Delete</button>
+            <button className='blue sm' onClick={() => setEditing(index)} disabled={index === editing}>Edit</button>
+            <button className='red sm' onClick={() => handleDelete(index)}>Delete</button>
           </EditComponent>
         ))}
       </div>

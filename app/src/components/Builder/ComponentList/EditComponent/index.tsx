@@ -43,7 +43,7 @@ const EditComponent = ({
             <input type='text' placeholder={key} key={key} onChange={(e) => handleUpdate(key, e.target.value)}
               defaultValue={node.variables[key]} />
           ))}
-          <button className='sm' onClick={() => onClose()}>Close</button>
+          <button className='red sm' onClick={() => onClose()}>Close</button>
         </div>
       </AnimateHeight>
     </div>
