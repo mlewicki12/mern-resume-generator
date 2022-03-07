@@ -30,11 +30,12 @@ const ComponentList = ({
     if(!component) return;
 
     setComponents(comps => [...comps, {
-      component: component.name,
+      component: selected,
       variables: component.variables.reduce((prev, next) => {
-        prev[next.name] = '';
+        // todo separate type checking
+        prev[next.name] = next.type.endsWith('list') ? [ '' ] : '';
         return prev;
-      }, {} as KeyValues<string>)
+      }, {} as KeyValues<string | string[]>)
     }]);
 
     setEditing(components.length);
@@ -83,11 +84,12 @@ const ComponentList = ({
         }
       </div>
       <div className='p-2' key='component-list'>
-        {components.map((comp, index) => (
+        {loaded && components.map((comp, index) => (
           <EditComponent 
             open={index === editing}
             node={comp}
             onUpdate={(value) => updateComponent(index, value)}
+            theme={loaded}
             onClose={() => setEditing(undefined)}
           >
             <button className='blue sm' onClick={() => setEditing(index)} disabled={index === editing}>Edit</button>

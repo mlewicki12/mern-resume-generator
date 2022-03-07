@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    @apply bg-cream;
+    @apply bg-cream overflow-x-hidden;
 
     height: 100vh;
     width: 100vw;
@@ -35,6 +35,10 @@
     @apply m-1 p-1 min-w-50 text-sm;
   }
 
+  button.xs {
+    @apply m-1 p-1 min-w-25 text-xs;
+  }
+
   button.active {
     @apply bg-white;
   }
@@ -60,7 +64,7 @@
   }
 
   input {
-    @apply m-2 p-2 pb-1 border-b border-black
+    @apply p-2 pb-1 border-b border-black
       hover:bg-cream;
   }
 }
@@ -79,6 +83,10 @@
       first:pt-0 last:pb-0;
   }
 
+  .row.closed {
+    @apply py-0;
+  }
+
   .form-controls {
     @apply row mt-auto p-2 border-t border-black;
   }
@@ -89,6 +97,10 @@
 
   .title.sm {
     @apply text-base;
+  }
+
+  .title.xs {
+    @apply text-sm;
   }
 
   .list {

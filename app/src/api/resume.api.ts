@@ -5,7 +5,7 @@ import { KeyValues, MongooseDocument } from '../utils/types';
 
 export type ResumeComponent = {
   component: string;
-  variables: KeyValues<string>;
+  variables: KeyValues<string | string[]>;
 }
 
 export type Resume = {
