@@ -1,4 +1,6 @@
 
+import 'dotenv/config';
+
 import fs from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';

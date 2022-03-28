@@ -5,7 +5,7 @@ import config from 'config';
 import logger from './logger';
 
 export default function connect() {
-  const dbUri = config.get<string>('dbUri');
+  const dbUri = process.env.MONGO_URI;
 
   return mongoose.connect(dbUri)
     .then(() => logger.info('connected to db'))
