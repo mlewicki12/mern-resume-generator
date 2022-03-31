@@ -18,7 +18,7 @@ types:
         type: string
 
       - name: list
-        type: string[]
+        type: string list
 
 components:
   header:
@@ -31,7 +31,7 @@ components:
         type: string
 
       - name: info
-        type: string[]
+        type: string list
 
   summary:
     name: Summary
@@ -46,4 +46,4 @@ components:
         type: string
 
       - name: sections
-        type: section[]
+        type: section list

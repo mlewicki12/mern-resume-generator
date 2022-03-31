@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useMatch, useNavigate, useParams } from 'react-router-dom';
-import { GetResume, Resume } from '../../api/resume.api';
+import { GetResume, Resume, ResumeComponent } from '../../api/resume.api';
 import ComponentList from './ComponentList';
 import ThemeSelect from './ThemeSelect';
 
@@ -11,6 +11,7 @@ const Builder = () => {
     theme: 'default',
     components: []
   });
+
   const [selected, setSelected] = useState<string>('');
   const [step, setStep] = useState<number>(0);
 
@@ -20,6 +21,13 @@ const Builder = () => {
   const updateName = (value: string) => {
     const newRes = {...resume};
     newRes.name = value;
+
+    setResume(newRes);
+  }
+
+  const updateComponents = (value: ResumeComponent[]) => {
+    const newRes = { ...resume };
+    newRes.components = value;
 
     setResume(newRes);
   }
@@ -43,11 +51,11 @@ const Builder = () => {
   const steps = [
     {
       name: 'theme-select',
-      component: (<ThemeSelect resume={resume} onSelectTheme={setSelected} onChangeName={name => updateName(name)} />)
+      component: (<ThemeSelect resume={resume} onChangeName={name => updateName(name)} onSelectTheme={setSelected} />)
     },
     {
       name: 'component-picker',
-      component: (<ComponentList resume={resume} theme={selected} />)
+      component: (<ComponentList resume={resume} theme={selected} onUpdate={value => updateComponents(value)} />)
     }
   ];
 
@@ -59,7 +67,7 @@ const Builder = () => {
         
       <div className='form-controls'>
         <button onClick={handleBack} className='red'>{step === 0 ? 'Cancel' : 'Back'}</button>
-        <button onClick={() => setStep(step => step + 1)} className='green' disabled={step === steps.length - 1} >Continue</button>
+        <button onClick={() => setStep(step => step + 1)} className='green' disabled={step === steps.length - 1}>Continue</button>
       </div>
     </div>
   );

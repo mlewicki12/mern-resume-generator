@@ -11,10 +11,12 @@ const Switch = ({
   component, children
 }: SwitchProps) => {
   const childArray = Array.isArray(children) ? children : [ children ];
+  const displayComponent = childArray.find(child => child.props.name === component)
+    ?? childArray.find(child => !child.props.name);
 
   return (
     <>
-      {childArray.find(child => child.props.name === component)}
+      {displayComponent}
     </>
   );
 }

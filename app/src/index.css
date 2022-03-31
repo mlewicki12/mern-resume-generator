@@ -40,7 +40,11 @@
   }
 
   button.active {
-    @apply bg-white;
+    @apply -translate-x-1 -translate-y-1
+            shadow-full
+            
+            hover:translate-x-0 hover:translate-y-0
+            hover:shadow-none;
   }
 
   button.red {
@@ -118,5 +122,9 @@
 
   .list:only-child {
     @apply rounded;
+  }
+
+  .component-input > * {
+    @apply m-1 last:mb-2;
   }
 }

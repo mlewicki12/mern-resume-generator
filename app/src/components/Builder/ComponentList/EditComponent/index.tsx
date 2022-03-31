@@ -1,6 +1,7 @@
 
 import React from 'react';
 import AnimateHeight from 'react-animate-height';
+
 import { ResumeComponent } from '../../../../api/resume.api';
 import { Theme } from '../../../../api/themes.api';
 import Title from '../../../Title';
@@ -40,13 +41,13 @@ const EditComponent = ({
       </div>
       <AnimateHeight height={open ? 'auto' : 0}>
         {/* react-animate-height puts a random empty div in their so this makes flex actually work */}
-        <div className='flex flex-col'>
-          {Object.keys(node.variables).map(key => ( 
-            <Input component={node.component} variable={key} theme={theme} onUpdate={handleUpdate} defaultValue={node.variables[key]} />
+        <div className='component-input flex flex-col'>
+          {Object.keys(node.variables).map((key, index) => ( 
+            <Input component={node.component} variable={key} key={`${node.component}-input-${key}-${index}`} theme={theme} onUpdate={handleUpdate} defaultValue={node.variables[key]} />
           ))}
-          <button className='red sm' onClick={() => onClose()}>Close</button>
         </div>
       </AnimateHeight>
+      {open && <button className='red sm' onClick={() => onClose()}>Close</button>}
     </div>
   );
 };

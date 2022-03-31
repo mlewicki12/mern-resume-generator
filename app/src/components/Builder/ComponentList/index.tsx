@@ -9,10 +9,12 @@ import EditComponent from './EditComponent';
 type ComponentListProps = {
   resume: Resume;
   theme: string;
+
+  onUpdate: (value: ResumeComponent[]) => void;
 }
 
 const ComponentList = ({
-  resume, theme
+  resume, theme, onUpdate
 }: ComponentListProps) => {
   const [loaded, setLoaded] = useState<Theme | undefined>();
   const [selected, setSelected] = useState<string>('');
@@ -68,24 +70,29 @@ const ComponentList = ({
       .catch(_ => {});
   }, [theme]);
 
+  useEffect(() => {
+    onUpdate(components);
+  }, [components]);
+
   return (
     <>
-      <div className='row border-b pb-2 mb-2 border-black' key='header'>
+      <div className='row border-b pb-2 mb-2 border-black' key={`${resume.name}-component-list-header`}>
         <Title title='Build your resume' subtitle='Pick a component from the list' />
         {loaded &&
           <div>
             <select onChange={e => setSelected(e.target.value)}>
               {Object.keys(loaded.components).map(key => (
-                <option value={key} key={key}>{loaded.components[key].name}</option>
+                <option value={key} key={`${resume.name}-component-list-component-${key}`}>{loaded.components[key].name}</option>
               ))}
             </select>
             <button onClick={handleAdd} className='green'>Add</button>
           </div>
         }
       </div>
-      <div className='p-2' key='component-list'>
+      <div className='p-2 overflow-x-auto' key={`${resume.name}-component-list`}>
         {loaded && components.map((comp, index) => (
           <EditComponent 
+            key={`${resume.name}-component-list-${comp.component}`}
             open={index === editing}
             node={comp}
             onUpdate={(value) => updateComponent(index, value)}
