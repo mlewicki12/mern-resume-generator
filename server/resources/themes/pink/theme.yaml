@@ -47,3 +47,9 @@ components:
 
       - name: sections
         type: section list
+
+  separator:
+    name: Separator
+    variables:
+      - name: height
+        type: number

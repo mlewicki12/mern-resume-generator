@@ -8,7 +8,7 @@
         "info": [
           "Ul. Zwolenska 46J/4",
           "04-761 Warsaw, Poland",
-          "lewickimapl@gmail.com",
+          "maciej@paper.boats",
           "github.com/mlewicki12",
           "+48 534-777-460"
         ]
@@ -26,18 +26,30 @@
         "title": "Professional Experience",
         "sections": [
           {
-            "title": "Full Stack Developer",
-            "company": "Documati",
-            "location": "Warsaw, Poland",
-            "dates": "March 2021 - Present",
+            "title": "Frontend Developer",
+            "company": "Toggl Track",
+            "location": "Remote",
+            "dates": "April 2022 - Present",
             "list": [
-              "Lead development of React web application to accompany .NET back-end",
-              "Manage Google Cloud Hosting and Firebase Authentication for over 1000 users",
-              "Work on implementing new features in .NET back-end"
+              "Develop new features for React time tracking app used by over 5 million people",
+              "Collaborate with a 6-person team on designing new user-facing reports features",
+              "Navigate and add new state components to React Redux store",
+              "Test React components using Jest"
             ]
           },
           {
-            "title": "Developer Co-op",
+            "title": "Full Stack Developer",
+            "company": "Documati",
+            "location": "Warsaw, Poland",
+            "dates": "March 2021 - April 2022",
+            "list": [
+              "Lead development of image generating React web application to accompany .NET back-end",
+              "Managed Google Cloud Hosting and Firebase Authentication for over 1000 users",
+              "Worked on implementing new endpoints and functionality in .NET back-end"
+            ]
+          },
+          {
+            "title": "Software Development Co-op",
             "company": "SmartStream Technologies",
             "location": "Philadelphia, PA",
             "dates": "September 2019 - April 2020",
@@ -49,7 +61,7 @@
             ]
           },
           {
-            "title": "Developer Co-op",
+            "title": "Software Development Co-op",
             "company": "SmartStream Technologies",
             "location": "Philadelphia, PA",
             "dates": "September 2018 - April 2019",
@@ -88,8 +100,9 @@
           {
             "title": "Programming Skills",
             "list": [
-              "HTML, CSS, Javascript",
-              "React, NextJS, RxJS, and Node.js frameworks",
+              "React, NextJS, RxJS, Redux, Jest, and Node.js frameworks",
+              "Go, C, C++, and Java experience",
+              "MongoDB and MySQL databases",
               "Google Cloud, Jira, Microsoft Azure"
             ]
           },
@@ -105,6 +118,12 @@
       }
     },
     {
+      "component": "separator",
+      "variables": {
+        "height": "50px"
+      }
+    },
+    {
       "component": "section",
       "variables": {
         "title": "Activities",
@@ -113,7 +132,9 @@
             "title": "Music",
             "list": [
               "Proficiency on bass guitar, guitar, and vocals. Experience planning, routing, and booking tours. Participation in over 100 live performances",
-              "Management and PR for Knifepunch Records"
+              "Ran an amateur music venue for two years in Philadelphia and organised several livestream shows earning over $1000 for charity",
+              "Management and PR for Knifepunch Records",
+              "Designed flyers for various shows"
             ]
           }
         ]
